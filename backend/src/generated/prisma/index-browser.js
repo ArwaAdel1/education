@@ -128,7 +128,6 @@ exports.Prisma.UserScalarFieldEnum = {
   mobile: 'mobile',
   role: 'role',
   status: 'status',
-  tenantId: 'tenantId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -136,6 +135,17 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.StudentProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TeacherProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  subject: 'subject',
+  bio: 'bio',
+  photoUrl: 'photoUrl',
+  logoUrl: 'logoUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -191,6 +201,7 @@ exports.OtpType = exports.$Enums.OtpType = {
 exports.Prisma.ModelName = {
   User: 'User',
   StudentProfile: 'StudentProfile',
+  TeacherProfile: 'TeacherProfile',
   Otp: 'Otp',
   RefreshToken: 'RefreshToken'
 };

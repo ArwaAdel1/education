@@ -34,10 +34,7 @@ export class AuthService {
       throw error;
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      input.password,
-      user.password,
-    );
+    const isPasswordValid = await bcrypt.compare(input.password, user.password);
 
     if (!isPasswordValid) {
       const error = new Error("Invalid email or password") as ApiError;
@@ -93,13 +90,19 @@ export class AuthService {
         data: {
           fullName: input.fullName,
           mobile: input.mobile,
-          email: input.email ?? null,
+          email: input.email,
           password: hashedPassword,
           role: input.role === "OPERATION" ? Role.OPERATION : Role.STUDENT,
           status: Status.ACTIVE,
         },
         select: userPublicFields,
       });
+
+      if (input.role === "OPERATION") {
+        await tx.teacherProfile.create({
+          data: { userId: created.id },
+        });
+      }
 
       if (input.role === "STUDENT") {
         await tx.studentProfile.create({

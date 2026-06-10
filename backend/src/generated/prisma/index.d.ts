@@ -24,6 +24,11 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type StudentProfile = $Result.DefaultSelection<Prisma.$StudentProfilePayload>
 /**
+ * Model TeacherProfile
+ * 
+ */
+export type TeacherProfile = $Result.DefaultSelection<Prisma.$TeacherProfilePayload>
+/**
  * Model Otp
  * 
  */
@@ -217,6 +222,16 @@ export class PrismaClient<
     * ```
     */
   get studentProfile(): Prisma.StudentProfileDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.teacherProfile`: Exposes CRUD operations for the **TeacherProfile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TeacherProfiles
+    * const teacherProfiles = await prisma.teacherProfile.findMany()
+    * ```
+    */
+  get teacherProfile(): Prisma.TeacherProfileDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.otp`: Exposes CRUD operations for the **Otp** model.
@@ -673,6 +688,7 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     StudentProfile: 'StudentProfile',
+    TeacherProfile: 'TeacherProfile',
     Otp: 'Otp',
     RefreshToken: 'RefreshToken'
   };
@@ -690,7 +706,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "studentProfile" | "otp" | "refreshToken"
+      modelProps: "user" | "studentProfile" | "teacherProfile" | "otp" | "refreshToken"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -839,6 +855,80 @@ export namespace Prisma {
           count: {
             args: Prisma.StudentProfileCountArgs<ExtArgs>
             result: $Utils.Optional<StudentProfileCountAggregateOutputType> | number
+          }
+        }
+      }
+      TeacherProfile: {
+        payload: Prisma.$TeacherProfilePayload<ExtArgs>
+        fields: Prisma.TeacherProfileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TeacherProfileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherProfilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TeacherProfileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherProfilePayload>
+          }
+          findFirst: {
+            args: Prisma.TeacherProfileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherProfilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TeacherProfileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherProfilePayload>
+          }
+          findMany: {
+            args: Prisma.TeacherProfileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherProfilePayload>[]
+          }
+          create: {
+            args: Prisma.TeacherProfileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherProfilePayload>
+          }
+          createMany: {
+            args: Prisma.TeacherProfileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TeacherProfileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherProfilePayload>[]
+          }
+          delete: {
+            args: Prisma.TeacherProfileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherProfilePayload>
+          }
+          update: {
+            args: Prisma.TeacherProfileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherProfilePayload>
+          }
+          deleteMany: {
+            args: Prisma.TeacherProfileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TeacherProfileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TeacherProfileUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherProfilePayload>[]
+          }
+          upsert: {
+            args: Prisma.TeacherProfileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherProfilePayload>
+          }
+          aggregate: {
+            args: Prisma.TeacherProfileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTeacherProfile>
+          }
+          groupBy: {
+            args: Prisma.TeacherProfileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TeacherProfileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TeacherProfileCountArgs<ExtArgs>
+            result: $Utils.Optional<TeacherProfileCountAggregateOutputType> | number
           }
         }
       }
@@ -1100,6 +1190,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     studentProfile?: StudentProfileOmit
+    teacherProfile?: TeacherProfileOmit
     otp?: OtpOmit
     refreshToken?: RefreshTokenOmit
   }
@@ -1239,7 +1330,6 @@ export namespace Prisma {
     mobile: string | null
     role: $Enums.Role | null
     status: $Enums.Status | null
-    tenantId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1252,7 +1342,6 @@ export namespace Prisma {
     mobile: string | null
     role: $Enums.Role | null
     status: $Enums.Status | null
-    tenantId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1265,7 +1354,6 @@ export namespace Prisma {
     mobile: number
     role: number
     status: number
-    tenantId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -1280,7 +1368,6 @@ export namespace Prisma {
     mobile?: true
     role?: true
     status?: true
-    tenantId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1293,7 +1380,6 @@ export namespace Prisma {
     mobile?: true
     role?: true
     status?: true
-    tenantId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1306,7 +1392,6 @@ export namespace Prisma {
     mobile?: true
     role?: true
     status?: true
-    tenantId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -1387,12 +1472,11 @@ export namespace Prisma {
   export type UserGroupByOutputType = {
     id: string
     fullName: string
-    email: string | null
+    email: string
     password: string
     mobile: string
     role: $Enums.Role
     status: $Enums.Status
-    tenantId: string
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -1422,12 +1506,12 @@ export namespace Prisma {
     mobile?: boolean
     role?: boolean
     status?: boolean
-    tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
     otps?: boolean | User$otpsArgs<ExtArgs>
     studentProfile?: boolean | User$studentProfileArgs<ExtArgs>
+    teacherProfile?: boolean | User$teacherProfileArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1439,7 +1523,6 @@ export namespace Prisma {
     mobile?: boolean
     role?: boolean
     status?: boolean
-    tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1452,7 +1535,6 @@ export namespace Prisma {
     mobile?: boolean
     role?: boolean
     status?: boolean
-    tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1465,16 +1547,16 @@ export namespace Prisma {
     mobile?: boolean
     role?: boolean
     status?: boolean
-    tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fullName" | "email" | "password" | "mobile" | "role" | "status" | "tenantId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fullName" | "email" | "password" | "mobile" | "role" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
     otps?: boolean | User$otpsArgs<ExtArgs>
     studentProfile?: boolean | User$studentProfileArgs<ExtArgs>
+    teacherProfile?: boolean | User$teacherProfileArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1486,16 +1568,16 @@ export namespace Prisma {
       refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[]
       otps: Prisma.$OtpPayload<ExtArgs>[]
       studentProfile: Prisma.$StudentProfilePayload<ExtArgs> | null
+      teacherProfile: Prisma.$TeacherProfilePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       fullName: string
-      email: string | null
+      email: string
       password: string
       mobile: string
       role: $Enums.Role
       status: $Enums.Status
-      tenantId: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -1895,6 +1977,7 @@ export namespace Prisma {
     refreshTokens<T extends User$refreshTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     otps<T extends User$otpsArgs<ExtArgs> = {}>(args?: Subset<T, User$otpsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OtpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     studentProfile<T extends User$studentProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$studentProfileArgs<ExtArgs>>): Prisma__StudentProfileClient<$Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    teacherProfile<T extends User$teacherProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$teacherProfileArgs<ExtArgs>>): Prisma__TeacherProfileClient<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1931,7 +2014,6 @@ export namespace Prisma {
     readonly mobile: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'Role'>
     readonly status: FieldRef<"User", 'Status'>
-    readonly tenantId: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -2391,6 +2473,25 @@ export namespace Prisma {
      */
     include?: StudentProfileInclude<ExtArgs> | null
     where?: StudentProfileWhereInput
+  }
+
+  /**
+   * User.teacherProfile
+   */
+  export type User$teacherProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileInclude<ExtArgs> | null
+    where?: TeacherProfileWhereInput
   }
 
   /**
@@ -3459,6 +3560,1108 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: StudentProfileInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TeacherProfile
+   */
+
+  export type AggregateTeacherProfile = {
+    _count: TeacherProfileCountAggregateOutputType | null
+    _min: TeacherProfileMinAggregateOutputType | null
+    _max: TeacherProfileMaxAggregateOutputType | null
+  }
+
+  export type TeacherProfileMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    subject: string | null
+    bio: string | null
+    photoUrl: string | null
+    logoUrl: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TeacherProfileMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    subject: string | null
+    bio: string | null
+    photoUrl: string | null
+    logoUrl: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TeacherProfileCountAggregateOutputType = {
+    id: number
+    userId: number
+    subject: number
+    bio: number
+    photoUrl: number
+    logoUrl: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TeacherProfileMinAggregateInputType = {
+    id?: true
+    userId?: true
+    subject?: true
+    bio?: true
+    photoUrl?: true
+    logoUrl?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TeacherProfileMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    subject?: true
+    bio?: true
+    photoUrl?: true
+    logoUrl?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TeacherProfileCountAggregateInputType = {
+    id?: true
+    userId?: true
+    subject?: true
+    bio?: true
+    photoUrl?: true
+    logoUrl?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TeacherProfileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TeacherProfile to aggregate.
+     */
+    where?: TeacherProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeacherProfiles to fetch.
+     */
+    orderBy?: TeacherProfileOrderByWithRelationInput | TeacherProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TeacherProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeacherProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeacherProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TeacherProfiles
+    **/
+    _count?: true | TeacherProfileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TeacherProfileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TeacherProfileMaxAggregateInputType
+  }
+
+  export type GetTeacherProfileAggregateType<T extends TeacherProfileAggregateArgs> = {
+        [P in keyof T & keyof AggregateTeacherProfile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTeacherProfile[P]>
+      : GetScalarType<T[P], AggregateTeacherProfile[P]>
+  }
+
+
+
+
+  export type TeacherProfileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeacherProfileWhereInput
+    orderBy?: TeacherProfileOrderByWithAggregationInput | TeacherProfileOrderByWithAggregationInput[]
+    by: TeacherProfileScalarFieldEnum[] | TeacherProfileScalarFieldEnum
+    having?: TeacherProfileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TeacherProfileCountAggregateInputType | true
+    _min?: TeacherProfileMinAggregateInputType
+    _max?: TeacherProfileMaxAggregateInputType
+  }
+
+  export type TeacherProfileGroupByOutputType = {
+    id: string
+    userId: string
+    subject: string | null
+    bio: string | null
+    photoUrl: string | null
+    logoUrl: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TeacherProfileCountAggregateOutputType | null
+    _min: TeacherProfileMinAggregateOutputType | null
+    _max: TeacherProfileMaxAggregateOutputType | null
+  }
+
+  type GetTeacherProfileGroupByPayload<T extends TeacherProfileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TeacherProfileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TeacherProfileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TeacherProfileGroupByOutputType[P]>
+            : GetScalarType<T[P], TeacherProfileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TeacherProfileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    subject?: boolean
+    bio?: boolean
+    photoUrl?: boolean
+    logoUrl?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["teacherProfile"]>
+
+  export type TeacherProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    subject?: boolean
+    bio?: boolean
+    photoUrl?: boolean
+    logoUrl?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["teacherProfile"]>
+
+  export type TeacherProfileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    subject?: boolean
+    bio?: boolean
+    photoUrl?: boolean
+    logoUrl?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["teacherProfile"]>
+
+  export type TeacherProfileSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    subject?: boolean
+    bio?: boolean
+    photoUrl?: boolean
+    logoUrl?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TeacherProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "subject" | "bio" | "photoUrl" | "logoUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["teacherProfile"]>
+  export type TeacherProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TeacherProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TeacherProfileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TeacherProfilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TeacherProfile"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      subject: string | null
+      bio: string | null
+      photoUrl: string | null
+      logoUrl: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["teacherProfile"]>
+    composites: {}
+  }
+
+  type TeacherProfileGetPayload<S extends boolean | null | undefined | TeacherProfileDefaultArgs> = $Result.GetResult<Prisma.$TeacherProfilePayload, S>
+
+  type TeacherProfileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TeacherProfileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TeacherProfileCountAggregateInputType | true
+    }
+
+  export interface TeacherProfileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TeacherProfile'], meta: { name: 'TeacherProfile' } }
+    /**
+     * Find zero or one TeacherProfile that matches the filter.
+     * @param {TeacherProfileFindUniqueArgs} args - Arguments to find a TeacherProfile
+     * @example
+     * // Get one TeacherProfile
+     * const teacherProfile = await prisma.teacherProfile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TeacherProfileFindUniqueArgs>(args: SelectSubset<T, TeacherProfileFindUniqueArgs<ExtArgs>>): Prisma__TeacherProfileClient<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TeacherProfile that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TeacherProfileFindUniqueOrThrowArgs} args - Arguments to find a TeacherProfile
+     * @example
+     * // Get one TeacherProfile
+     * const teacherProfile = await prisma.teacherProfile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TeacherProfileFindUniqueOrThrowArgs>(args: SelectSubset<T, TeacherProfileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TeacherProfileClient<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TeacherProfile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherProfileFindFirstArgs} args - Arguments to find a TeacherProfile
+     * @example
+     * // Get one TeacherProfile
+     * const teacherProfile = await prisma.teacherProfile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TeacherProfileFindFirstArgs>(args?: SelectSubset<T, TeacherProfileFindFirstArgs<ExtArgs>>): Prisma__TeacherProfileClient<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TeacherProfile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherProfileFindFirstOrThrowArgs} args - Arguments to find a TeacherProfile
+     * @example
+     * // Get one TeacherProfile
+     * const teacherProfile = await prisma.teacherProfile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TeacherProfileFindFirstOrThrowArgs>(args?: SelectSubset<T, TeacherProfileFindFirstOrThrowArgs<ExtArgs>>): Prisma__TeacherProfileClient<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TeacherProfiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherProfileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TeacherProfiles
+     * const teacherProfiles = await prisma.teacherProfile.findMany()
+     * 
+     * // Get first 10 TeacherProfiles
+     * const teacherProfiles = await prisma.teacherProfile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const teacherProfileWithIdOnly = await prisma.teacherProfile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TeacherProfileFindManyArgs>(args?: SelectSubset<T, TeacherProfileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TeacherProfile.
+     * @param {TeacherProfileCreateArgs} args - Arguments to create a TeacherProfile.
+     * @example
+     * // Create one TeacherProfile
+     * const TeacherProfile = await prisma.teacherProfile.create({
+     *   data: {
+     *     // ... data to create a TeacherProfile
+     *   }
+     * })
+     * 
+     */
+    create<T extends TeacherProfileCreateArgs>(args: SelectSubset<T, TeacherProfileCreateArgs<ExtArgs>>): Prisma__TeacherProfileClient<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TeacherProfiles.
+     * @param {TeacherProfileCreateManyArgs} args - Arguments to create many TeacherProfiles.
+     * @example
+     * // Create many TeacherProfiles
+     * const teacherProfile = await prisma.teacherProfile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TeacherProfileCreateManyArgs>(args?: SelectSubset<T, TeacherProfileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TeacherProfiles and returns the data saved in the database.
+     * @param {TeacherProfileCreateManyAndReturnArgs} args - Arguments to create many TeacherProfiles.
+     * @example
+     * // Create many TeacherProfiles
+     * const teacherProfile = await prisma.teacherProfile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TeacherProfiles and only return the `id`
+     * const teacherProfileWithIdOnly = await prisma.teacherProfile.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TeacherProfileCreateManyAndReturnArgs>(args?: SelectSubset<T, TeacherProfileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TeacherProfile.
+     * @param {TeacherProfileDeleteArgs} args - Arguments to delete one TeacherProfile.
+     * @example
+     * // Delete one TeacherProfile
+     * const TeacherProfile = await prisma.teacherProfile.delete({
+     *   where: {
+     *     // ... filter to delete one TeacherProfile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TeacherProfileDeleteArgs>(args: SelectSubset<T, TeacherProfileDeleteArgs<ExtArgs>>): Prisma__TeacherProfileClient<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TeacherProfile.
+     * @param {TeacherProfileUpdateArgs} args - Arguments to update one TeacherProfile.
+     * @example
+     * // Update one TeacherProfile
+     * const teacherProfile = await prisma.teacherProfile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TeacherProfileUpdateArgs>(args: SelectSubset<T, TeacherProfileUpdateArgs<ExtArgs>>): Prisma__TeacherProfileClient<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TeacherProfiles.
+     * @param {TeacherProfileDeleteManyArgs} args - Arguments to filter TeacherProfiles to delete.
+     * @example
+     * // Delete a few TeacherProfiles
+     * const { count } = await prisma.teacherProfile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TeacherProfileDeleteManyArgs>(args?: SelectSubset<T, TeacherProfileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TeacherProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherProfileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TeacherProfiles
+     * const teacherProfile = await prisma.teacherProfile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TeacherProfileUpdateManyArgs>(args: SelectSubset<T, TeacherProfileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TeacherProfiles and returns the data updated in the database.
+     * @param {TeacherProfileUpdateManyAndReturnArgs} args - Arguments to update many TeacherProfiles.
+     * @example
+     * // Update many TeacherProfiles
+     * const teacherProfile = await prisma.teacherProfile.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TeacherProfiles and only return the `id`
+     * const teacherProfileWithIdOnly = await prisma.teacherProfile.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TeacherProfileUpdateManyAndReturnArgs>(args: SelectSubset<T, TeacherProfileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TeacherProfile.
+     * @param {TeacherProfileUpsertArgs} args - Arguments to update or create a TeacherProfile.
+     * @example
+     * // Update or create a TeacherProfile
+     * const teacherProfile = await prisma.teacherProfile.upsert({
+     *   create: {
+     *     // ... data to create a TeacherProfile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TeacherProfile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TeacherProfileUpsertArgs>(args: SelectSubset<T, TeacherProfileUpsertArgs<ExtArgs>>): Prisma__TeacherProfileClient<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TeacherProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherProfileCountArgs} args - Arguments to filter TeacherProfiles to count.
+     * @example
+     * // Count the number of TeacherProfiles
+     * const count = await prisma.teacherProfile.count({
+     *   where: {
+     *     // ... the filter for the TeacherProfiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends TeacherProfileCountArgs>(
+      args?: Subset<T, TeacherProfileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TeacherProfileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TeacherProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherProfileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TeacherProfileAggregateArgs>(args: Subset<T, TeacherProfileAggregateArgs>): Prisma.PrismaPromise<GetTeacherProfileAggregateType<T>>
+
+    /**
+     * Group by TeacherProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherProfileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TeacherProfileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TeacherProfileGroupByArgs['orderBy'] }
+        : { orderBy?: TeacherProfileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TeacherProfileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTeacherProfileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TeacherProfile model
+   */
+  readonly fields: TeacherProfileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TeacherProfile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TeacherProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TeacherProfile model
+   */
+  interface TeacherProfileFieldRefs {
+    readonly id: FieldRef<"TeacherProfile", 'String'>
+    readonly userId: FieldRef<"TeacherProfile", 'String'>
+    readonly subject: FieldRef<"TeacherProfile", 'String'>
+    readonly bio: FieldRef<"TeacherProfile", 'String'>
+    readonly photoUrl: FieldRef<"TeacherProfile", 'String'>
+    readonly logoUrl: FieldRef<"TeacherProfile", 'String'>
+    readonly createdAt: FieldRef<"TeacherProfile", 'DateTime'>
+    readonly updatedAt: FieldRef<"TeacherProfile", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TeacherProfile findUnique
+   */
+  export type TeacherProfileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which TeacherProfile to fetch.
+     */
+    where: TeacherProfileWhereUniqueInput
+  }
+
+  /**
+   * TeacherProfile findUniqueOrThrow
+   */
+  export type TeacherProfileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which TeacherProfile to fetch.
+     */
+    where: TeacherProfileWhereUniqueInput
+  }
+
+  /**
+   * TeacherProfile findFirst
+   */
+  export type TeacherProfileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which TeacherProfile to fetch.
+     */
+    where?: TeacherProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeacherProfiles to fetch.
+     */
+    orderBy?: TeacherProfileOrderByWithRelationInput | TeacherProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TeacherProfiles.
+     */
+    cursor?: TeacherProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeacherProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeacherProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TeacherProfiles.
+     */
+    distinct?: TeacherProfileScalarFieldEnum | TeacherProfileScalarFieldEnum[]
+  }
+
+  /**
+   * TeacherProfile findFirstOrThrow
+   */
+  export type TeacherProfileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which TeacherProfile to fetch.
+     */
+    where?: TeacherProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeacherProfiles to fetch.
+     */
+    orderBy?: TeacherProfileOrderByWithRelationInput | TeacherProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TeacherProfiles.
+     */
+    cursor?: TeacherProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeacherProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeacherProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TeacherProfiles.
+     */
+    distinct?: TeacherProfileScalarFieldEnum | TeacherProfileScalarFieldEnum[]
+  }
+
+  /**
+   * TeacherProfile findMany
+   */
+  export type TeacherProfileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which TeacherProfiles to fetch.
+     */
+    where?: TeacherProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeacherProfiles to fetch.
+     */
+    orderBy?: TeacherProfileOrderByWithRelationInput | TeacherProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TeacherProfiles.
+     */
+    cursor?: TeacherProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeacherProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeacherProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TeacherProfiles.
+     */
+    distinct?: TeacherProfileScalarFieldEnum | TeacherProfileScalarFieldEnum[]
+  }
+
+  /**
+   * TeacherProfile create
+   */
+  export type TeacherProfileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TeacherProfile.
+     */
+    data: XOR<TeacherProfileCreateInput, TeacherProfileUncheckedCreateInput>
+  }
+
+  /**
+   * TeacherProfile createMany
+   */
+  export type TeacherProfileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TeacherProfiles.
+     */
+    data: TeacherProfileCreateManyInput | TeacherProfileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TeacherProfile createManyAndReturn
+   */
+  export type TeacherProfileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * The data used to create many TeacherProfiles.
+     */
+    data: TeacherProfileCreateManyInput | TeacherProfileCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TeacherProfile update
+   */
+  export type TeacherProfileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TeacherProfile.
+     */
+    data: XOR<TeacherProfileUpdateInput, TeacherProfileUncheckedUpdateInput>
+    /**
+     * Choose, which TeacherProfile to update.
+     */
+    where: TeacherProfileWhereUniqueInput
+  }
+
+  /**
+   * TeacherProfile updateMany
+   */
+  export type TeacherProfileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TeacherProfiles.
+     */
+    data: XOR<TeacherProfileUpdateManyMutationInput, TeacherProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which TeacherProfiles to update
+     */
+    where?: TeacherProfileWhereInput
+    /**
+     * Limit how many TeacherProfiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TeacherProfile updateManyAndReturn
+   */
+  export type TeacherProfileUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * The data used to update TeacherProfiles.
+     */
+    data: XOR<TeacherProfileUpdateManyMutationInput, TeacherProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which TeacherProfiles to update
+     */
+    where?: TeacherProfileWhereInput
+    /**
+     * Limit how many TeacherProfiles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TeacherProfile upsert
+   */
+  export type TeacherProfileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TeacherProfile to update in case it exists.
+     */
+    where: TeacherProfileWhereUniqueInput
+    /**
+     * In case the TeacherProfile found by the `where` argument doesn't exist, create a new TeacherProfile with this data.
+     */
+    create: XOR<TeacherProfileCreateInput, TeacherProfileUncheckedCreateInput>
+    /**
+     * In case the TeacherProfile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TeacherProfileUpdateInput, TeacherProfileUncheckedUpdateInput>
+  }
+
+  /**
+   * TeacherProfile delete
+   */
+  export type TeacherProfileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileInclude<ExtArgs> | null
+    /**
+     * Filter which TeacherProfile to delete.
+     */
+    where: TeacherProfileWhereUniqueInput
+  }
+
+  /**
+   * TeacherProfile deleteMany
+   */
+  export type TeacherProfileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TeacherProfiles to delete
+     */
+    where?: TeacherProfileWhereInput
+    /**
+     * Limit how many TeacherProfiles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TeacherProfile without action
+   */
+  export type TeacherProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherProfile
+     */
+    select?: TeacherProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherProfile
+     */
+    omit?: TeacherProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherProfileInclude<ExtArgs> | null
   }
 
 
@@ -5623,7 +6826,6 @@ export namespace Prisma {
     mobile: 'mobile',
     role: 'role',
     status: 'status',
-    tenantId: 'tenantId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -5639,6 +6841,20 @@ export namespace Prisma {
   };
 
   export type StudentProfileScalarFieldEnum = (typeof StudentProfileScalarFieldEnum)[keyof typeof StudentProfileScalarFieldEnum]
+
+
+  export const TeacherProfileScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    subject: 'subject',
+    bio: 'bio',
+    photoUrl: 'photoUrl',
+    logoUrl: 'logoUrl',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TeacherProfileScalarFieldEnum = (typeof TeacherProfileScalarFieldEnum)[keyof typeof TeacherProfileScalarFieldEnum]
 
 
   export const OtpScalarFieldEnum: {
@@ -5786,33 +7002,33 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     id?: StringFilter<"User"> | string
     fullName?: StringFilter<"User"> | string
-    email?: StringNullableFilter<"User"> | string | null
+    email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     mobile?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     status?: EnumStatusFilter<"User"> | $Enums.Status
-    tenantId?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     refreshTokens?: RefreshTokenListRelationFilter
     otps?: OtpListRelationFilter
     studentProfile?: XOR<StudentProfileNullableScalarRelationFilter, StudentProfileWhereInput> | null
+    teacherProfile?: XOR<TeacherProfileNullableScalarRelationFilter, TeacherProfileWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     fullName?: SortOrder
-    email?: SortOrderInput | SortOrder
+    email?: SortOrder
     password?: SortOrder
     mobile?: SortOrder
     role?: SortOrder
     status?: SortOrder
-    tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     refreshTokens?: RefreshTokenOrderByRelationAggregateInput
     otps?: OtpOrderByRelationAggregateInput
     studentProfile?: StudentProfileOrderByWithRelationInput
+    teacherProfile?: TeacherProfileOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -5826,23 +7042,22 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     status?: EnumStatusFilter<"User"> | $Enums.Status
-    tenantId?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     refreshTokens?: RefreshTokenListRelationFilter
     otps?: OtpListRelationFilter
     studentProfile?: XOR<StudentProfileNullableScalarRelationFilter, StudentProfileWhereInput> | null
+    teacherProfile?: XOR<TeacherProfileNullableScalarRelationFilter, TeacherProfileWhereInput> | null
   }, "id" | "email" | "mobile">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     fullName?: SortOrder
-    email?: SortOrderInput | SortOrder
+    email?: SortOrder
     password?: SortOrder
     mobile?: SortOrder
     role?: SortOrder
     status?: SortOrder
-    tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -5856,12 +7071,11 @@ export namespace Prisma {
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"User"> | string
     fullName?: StringWithAggregatesFilter<"User"> | string
-    email?: StringNullableWithAggregatesFilter<"User"> | string | null
+    email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
     mobile?: StringWithAggregatesFilter<"User"> | string
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     status?: EnumStatusWithAggregatesFilter<"User"> | $Enums.Status
-    tenantId?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -5914,6 +7128,76 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"StudentProfile"> | string
     createdAt?: DateTimeWithAggregatesFilter<"StudentProfile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"StudentProfile"> | Date | string
+  }
+
+  export type TeacherProfileWhereInput = {
+    AND?: TeacherProfileWhereInput | TeacherProfileWhereInput[]
+    OR?: TeacherProfileWhereInput[]
+    NOT?: TeacherProfileWhereInput | TeacherProfileWhereInput[]
+    id?: StringFilter<"TeacherProfile"> | string
+    userId?: StringFilter<"TeacherProfile"> | string
+    subject?: StringNullableFilter<"TeacherProfile"> | string | null
+    bio?: StringNullableFilter<"TeacherProfile"> | string | null
+    photoUrl?: StringNullableFilter<"TeacherProfile"> | string | null
+    logoUrl?: StringNullableFilter<"TeacherProfile"> | string | null
+    createdAt?: DateTimeFilter<"TeacherProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"TeacherProfile"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type TeacherProfileOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    subject?: SortOrderInput | SortOrder
+    bio?: SortOrderInput | SortOrder
+    photoUrl?: SortOrderInput | SortOrder
+    logoUrl?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type TeacherProfileWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: TeacherProfileWhereInput | TeacherProfileWhereInput[]
+    OR?: TeacherProfileWhereInput[]
+    NOT?: TeacherProfileWhereInput | TeacherProfileWhereInput[]
+    subject?: StringNullableFilter<"TeacherProfile"> | string | null
+    bio?: StringNullableFilter<"TeacherProfile"> | string | null
+    photoUrl?: StringNullableFilter<"TeacherProfile"> | string | null
+    logoUrl?: StringNullableFilter<"TeacherProfile"> | string | null
+    createdAt?: DateTimeFilter<"TeacherProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"TeacherProfile"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type TeacherProfileOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    subject?: SortOrderInput | SortOrder
+    bio?: SortOrderInput | SortOrder
+    photoUrl?: SortOrderInput | SortOrder
+    logoUrl?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TeacherProfileCountOrderByAggregateInput
+    _max?: TeacherProfileMaxOrderByAggregateInput
+    _min?: TeacherProfileMinOrderByAggregateInput
+  }
+
+  export type TeacherProfileScalarWhereWithAggregatesInput = {
+    AND?: TeacherProfileScalarWhereWithAggregatesInput | TeacherProfileScalarWhereWithAggregatesInput[]
+    OR?: TeacherProfileScalarWhereWithAggregatesInput[]
+    NOT?: TeacherProfileScalarWhereWithAggregatesInput | TeacherProfileScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TeacherProfile"> | string
+    userId?: StringWithAggregatesFilter<"TeacherProfile"> | string
+    subject?: StringNullableWithAggregatesFilter<"TeacherProfile"> | string | null
+    bio?: StringNullableWithAggregatesFilter<"TeacherProfile"> | string | null
+    photoUrl?: StringNullableWithAggregatesFilter<"TeacherProfile"> | string | null
+    logoUrl?: StringNullableWithAggregatesFilter<"TeacherProfile"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TeacherProfile"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TeacherProfile"> | Date | string
   }
 
   export type OtpWhereInput = {
@@ -6034,76 +7318,75 @@ export namespace Prisma {
   export type UserCreateInput = {
     id?: string
     fullName: string
-    email?: string | null
+    email: string
     password: string
     mobile: string
     role?: $Enums.Role
     status?: $Enums.Status
-    tenantId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     otps?: OtpCreateNestedManyWithoutUserInput
     studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
     id?: string
     fullName: string
-    email?: string | null
+    email: string
     password: string
     mobile: string
     role?: $Enums.Role
     status?: $Enums.Status
-    tenantId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     otps?: OtpUncheckedCreateNestedManyWithoutUserInput
     studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     mobile?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     otps?: OtpUpdateManyWithoutUserNestedInput
     studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     mobile?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     otps?: OtpUncheckedUpdateManyWithoutUserNestedInput
     studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
     id?: string
     fullName: string
-    email?: string | null
+    email: string
     password: string
     mobile: string
     role?: $Enums.Role
     status?: $Enums.Status
-    tenantId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6111,12 +7394,11 @@ export namespace Prisma {
   export type UserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     mobile?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6124,12 +7406,11 @@ export namespace Prisma {
   export type UserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     mobile?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6178,6 +7459,82 @@ export namespace Prisma {
   export type StudentProfileUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherProfileCreateInput = {
+    id?: string
+    subject?: string | null
+    bio?: string | null
+    photoUrl?: string | null
+    logoUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTeacherProfileInput
+  }
+
+  export type TeacherProfileUncheckedCreateInput = {
+    id?: string
+    userId: string
+    subject?: string | null
+    bio?: string | null
+    photoUrl?: string | null
+    logoUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeacherProfileUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTeacherProfileNestedInput
+  }
+
+  export type TeacherProfileUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherProfileCreateManyInput = {
+    id?: string
+    userId: string
+    subject?: string | null
+    bio?: string | null
+    photoUrl?: string | null
+    logoUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeacherProfileUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherProfileUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6314,21 +7671,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type EnumRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
     in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
@@ -6371,9 +7713,9 @@ export namespace Prisma {
     isNot?: StudentProfileWhereInput | null
   }
 
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
+  export type TeacherProfileNullableScalarRelationFilter = {
+    is?: TeacherProfileWhereInput | null
+    isNot?: TeacherProfileWhereInput | null
   }
 
   export type RefreshTokenOrderByRelationAggregateInput = {
@@ -6392,7 +7734,6 @@ export namespace Prisma {
     mobile?: SortOrder
     role?: SortOrder
     status?: SortOrder
-    tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6405,7 +7746,6 @@ export namespace Prisma {
     mobile?: SortOrder
     role?: SortOrder
     status?: SortOrder
-    tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6418,7 +7758,6 @@ export namespace Prisma {
     mobile?: SortOrder
     role?: SortOrder
     status?: SortOrder
-    tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6439,24 +7778,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type EnumRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -6517,6 +7838,77 @@ export namespace Prisma {
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type TeacherProfileCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    subject?: SortOrder
+    bio?: SortOrder
+    photoUrl?: SortOrder
+    logoUrl?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TeacherProfileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    subject?: SortOrder
+    bio?: SortOrder
+    photoUrl?: SortOrder
+    logoUrl?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TeacherProfileMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    subject?: SortOrder
+    bio?: SortOrder
+    photoUrl?: SortOrder
+    logoUrl?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type EnumOtpTypeFilter<$PrismaModel = never> = {
@@ -6632,6 +8024,12 @@ export namespace Prisma {
     connect?: StudentProfileWhereUniqueInput
   }
 
+  export type TeacherProfileCreateNestedOneWithoutUserInput = {
+    create?: XOR<TeacherProfileCreateWithoutUserInput, TeacherProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: TeacherProfileCreateOrConnectWithoutUserInput
+    connect?: TeacherProfileWhereUniqueInput
+  }
+
   export type RefreshTokenUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
@@ -6652,12 +8050,14 @@ export namespace Prisma {
     connect?: StudentProfileWhereUniqueInput
   }
 
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
+  export type TeacherProfileUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<TeacherProfileCreateWithoutUserInput, TeacherProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: TeacherProfileCreateOrConnectWithoutUserInput
+    connect?: TeacherProfileWhereUniqueInput
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
   }
 
   export type EnumRoleFieldUpdateOperationsInput = {
@@ -6710,6 +8110,16 @@ export namespace Prisma {
     update?: XOR<XOR<StudentProfileUpdateToOneWithWhereWithoutUserInput, StudentProfileUpdateWithoutUserInput>, StudentProfileUncheckedUpdateWithoutUserInput>
   }
 
+  export type TeacherProfileUpdateOneWithoutUserNestedInput = {
+    create?: XOR<TeacherProfileCreateWithoutUserInput, TeacherProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: TeacherProfileCreateOrConnectWithoutUserInput
+    upsert?: TeacherProfileUpsertWithoutUserInput
+    disconnect?: TeacherProfileWhereInput | boolean
+    delete?: TeacherProfileWhereInput | boolean
+    connect?: TeacherProfileWhereUniqueInput
+    update?: XOR<XOR<TeacherProfileUpdateToOneWithWhereWithoutUserInput, TeacherProfileUpdateWithoutUserInput>, TeacherProfileUncheckedUpdateWithoutUserInput>
+  }
+
   export type RefreshTokenUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
@@ -6748,6 +8158,16 @@ export namespace Prisma {
     update?: XOR<XOR<StudentProfileUpdateToOneWithWhereWithoutUserInput, StudentProfileUpdateWithoutUserInput>, StudentProfileUncheckedUpdateWithoutUserInput>
   }
 
+  export type TeacherProfileUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<TeacherProfileCreateWithoutUserInput, TeacherProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: TeacherProfileCreateOrConnectWithoutUserInput
+    upsert?: TeacherProfileUpsertWithoutUserInput
+    disconnect?: TeacherProfileWhereInput | boolean
+    delete?: TeacherProfileWhereInput | boolean
+    connect?: TeacherProfileWhereUniqueInput
+    update?: XOR<XOR<TeacherProfileUpdateToOneWithWhereWithoutUserInput, TeacherProfileUpdateWithoutUserInput>, TeacherProfileUncheckedUpdateWithoutUserInput>
+  }
+
   export type UserCreateNestedOneWithoutStudentProfileInput = {
     create?: XOR<UserCreateWithoutStudentProfileInput, UserUncheckedCreateWithoutStudentProfileInput>
     connectOrCreate?: UserCreateOrConnectWithoutStudentProfileInput
@@ -6760,6 +8180,24 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutStudentProfileInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStudentProfileInput, UserUpdateWithoutStudentProfileInput>, UserUncheckedUpdateWithoutStudentProfileInput>
+  }
+
+  export type UserCreateNestedOneWithoutTeacherProfileInput = {
+    create?: XOR<UserCreateWithoutTeacherProfileInput, UserUncheckedCreateWithoutTeacherProfileInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTeacherProfileInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutTeacherProfileNestedInput = {
+    create?: XOR<UserCreateWithoutTeacherProfileInput, UserUncheckedCreateWithoutTeacherProfileInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTeacherProfileInput
+    upsert?: UserUpsertWithoutTeacherProfileInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTeacherProfileInput, UserUpdateWithoutTeacherProfileInput>, UserUncheckedUpdateWithoutTeacherProfileInput>
   }
 
   export type UserCreateNestedOneWithoutOtpsInput = {
@@ -6810,20 +8248,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedEnumRoleFilter<$PrismaModel = never> = {
@@ -6879,34 +8303,6 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
     in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
@@ -6939,6 +8335,48 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumOtpTypeFilter<$PrismaModel = never> = {
@@ -7050,6 +8488,31 @@ export namespace Prisma {
     create: XOR<StudentProfileCreateWithoutUserInput, StudentProfileUncheckedCreateWithoutUserInput>
   }
 
+  export type TeacherProfileCreateWithoutUserInput = {
+    id?: string
+    subject?: string | null
+    bio?: string | null
+    photoUrl?: string | null
+    logoUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeacherProfileUncheckedCreateWithoutUserInput = {
+    id?: string
+    subject?: string | null
+    bio?: string | null
+    photoUrl?: string | null
+    logoUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeacherProfileCreateOrConnectWithoutUserInput = {
+    where: TeacherProfileWhereUniqueInput
+    create: XOR<TeacherProfileCreateWithoutUserInput, TeacherProfileUncheckedCreateWithoutUserInput>
+  }
+
   export type RefreshTokenUpsertWithWhereUniqueWithoutUserInput = {
     where: RefreshTokenWhereUniqueInput
     update: XOR<RefreshTokenUpdateWithoutUserInput, RefreshTokenUncheckedUpdateWithoutUserInput>
@@ -7128,34 +8591,65 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TeacherProfileUpsertWithoutUserInput = {
+    update: XOR<TeacherProfileUpdateWithoutUserInput, TeacherProfileUncheckedUpdateWithoutUserInput>
+    create: XOR<TeacherProfileCreateWithoutUserInput, TeacherProfileUncheckedCreateWithoutUserInput>
+    where?: TeacherProfileWhereInput
+  }
+
+  export type TeacherProfileUpdateToOneWithWhereWithoutUserInput = {
+    where?: TeacherProfileWhereInput
+    data: XOR<TeacherProfileUpdateWithoutUserInput, TeacherProfileUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TeacherProfileUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherProfileUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateWithoutStudentProfileInput = {
     id?: string
     fullName: string
-    email?: string | null
+    email: string
     password: string
     mobile: string
     role?: $Enums.Role
     status?: $Enums.Status
-    tenantId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     otps?: OtpCreateNestedManyWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentProfileInput = {
     id?: string
     fullName: string
-    email?: string | null
+    email: string
     password: string
     mobile: string
     role?: $Enums.Role
     status?: $Enums.Status
-    tenantId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     otps?: OtpUncheckedCreateNestedManyWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -7177,61 +8671,137 @@ export namespace Prisma {
   export type UserUpdateWithoutStudentProfileInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     mobile?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     otps?: OtpUpdateManyWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentProfileInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     mobile?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     otps?: OtpUncheckedUpdateManyWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutTeacherProfileInput = {
+    id?: string
+    fullName: string
+    email: string
+    password: string
+    mobile: string
+    role?: $Enums.Role
+    status?: $Enums.Status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    otps?: OtpCreateNestedManyWithoutUserInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTeacherProfileInput = {
+    id?: string
+    fullName: string
+    email: string
+    password: string
+    mobile: string
+    role?: $Enums.Role
+    status?: $Enums.Status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    otps?: OtpUncheckedCreateNestedManyWithoutUserInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTeacherProfileInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTeacherProfileInput, UserUncheckedCreateWithoutTeacherProfileInput>
+  }
+
+  export type UserUpsertWithoutTeacherProfileInput = {
+    update: XOR<UserUpdateWithoutTeacherProfileInput, UserUncheckedUpdateWithoutTeacherProfileInput>
+    create: XOR<UserCreateWithoutTeacherProfileInput, UserUncheckedCreateWithoutTeacherProfileInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTeacherProfileInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTeacherProfileInput, UserUncheckedUpdateWithoutTeacherProfileInput>
+  }
+
+  export type UserUpdateWithoutTeacherProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    otps?: OtpUpdateManyWithoutUserNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTeacherProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    otps?: OtpUncheckedUpdateManyWithoutUserNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutOtpsInput = {
     id?: string
     fullName: string
-    email?: string | null
+    email: string
     password: string
     mobile: string
     role?: $Enums.Role
     status?: $Enums.Status
-    tenantId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOtpsInput = {
     id?: string
     fullName: string
-    email?: string | null
+    email: string
     password: string
     mobile: string
     role?: $Enums.Role
     status?: $Enums.Status
-    tenantId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOtpsInput = {
@@ -7253,61 +8823,61 @@ export namespace Prisma {
   export type UserUpdateWithoutOtpsInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     mobile?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOtpsInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     mobile?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutRefreshTokensInput = {
     id?: string
     fullName: string
-    email?: string | null
+    email: string
     password: string
     mobile: string
     role?: $Enums.Role
     status?: $Enums.Status
-    tenantId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     otps?: OtpCreateNestedManyWithoutUserInput
     studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRefreshTokensInput = {
     id?: string
     fullName: string
-    email?: string | null
+    email: string
     password: string
     mobile: string
     role?: $Enums.Role
     status?: $Enums.Status
-    tenantId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     otps?: OtpUncheckedCreateNestedManyWithoutUserInput
     studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRefreshTokensInput = {
@@ -7329,31 +8899,31 @@ export namespace Prisma {
   export type UserUpdateWithoutRefreshTokensInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     mobile?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     otps?: OtpUpdateManyWithoutUserNestedInput
     studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRefreshTokensInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     mobile?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     otps?: OtpUncheckedUpdateManyWithoutUserNestedInput
     studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type RefreshTokenCreateManyUserInput = {
