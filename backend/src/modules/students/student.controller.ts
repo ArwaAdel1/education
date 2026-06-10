@@ -7,7 +7,10 @@ import { okResponse } from "../../shared/utils/apiResponse.js";
 import { AppError } from "../../shared/utils/AppError.js";
 import { userPublicFields } from "../users/user.types.js";
 import { studentPublicFields } from "./student.types.js";
-import type { CreateStudentInput, UpdateStudentInput } from "./student.validation.js";
+import type {
+  CreateStudentInput,
+  UpdateStudentInput,
+} from "./student.validation.js";
 
 const Student = prisma.studentProfile;
 
@@ -76,9 +79,7 @@ export class StudentController {
         select: { ...userPublicFields, studentProfile: true },
       });
 
-      _res
-        .status(200)
-        .json(okResponse("Student updated successfully", user));
+      _res.status(200).json(okResponse("Student updated successfully", user));
     },
   );
 
@@ -96,17 +97,11 @@ export class StudentController {
 
       await prisma.user.delete({ where: { id } });
 
-      _res
-        .status(200)
-        .json(okResponse("Student deleted successfully"));
+      _res.status(200).json(okResponse("Student deleted successfully"));
     },
   );
 
-  public create = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
+  public create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { fullName, email, password, mobile } =
         req.body as CreateStudentInput;
@@ -115,9 +110,7 @@ export class StudentController {
         where: { OR: [{ email }, { mobile }] },
       });
       if (existing) {
-        return next(
-          new AppError("Email or mobile number already exists", 409),
-        );
+        return next(new AppError("Email or mobile number already exists", 409));
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);

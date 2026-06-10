@@ -58,6 +58,12 @@ export class AuthService {
         select: userPublicFields,
       });
 
+      if (input.role === "OPERATION") {
+        await tx.teacherProfile.create({
+          data: { userId: created.id },
+        });
+      }
+
       if (input.role === "STUDENT") {
         await tx.studentProfile.create({
           data: { userId: created.id },

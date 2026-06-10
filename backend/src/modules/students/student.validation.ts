@@ -28,7 +28,12 @@ export const updateStudentSchema = z
       .min(2, "Full name must be at least 2 characters")
       .max(100, "Full name must not exceed 100 characters")
       .optional(),
-    email: z.string().trim().email("Invalid email address").toLowerCase().optional(),
+    email: z
+      .string()
+      .trim()
+      .email("Invalid email address")
+      .toLowerCase()
+      .optional(),
     mobile: z
       .string()
       .trim()

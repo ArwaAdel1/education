@@ -4,13 +4,13 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/users/user.routes.js";
+import teacherRoutes from "./modules/teacher/teacher.routes.js";
 import { rateLimiter } from "./shared/middlewares/rateLimiter.middleware.js";
 import { errorHandler } from "./shared/middlewares/errorHandler.middleware.js";
 import { notFoundHandler } from "./shared/middlewares/notFound.middleware.js";
 
 export function createApp(): Application {
   const app = express();
-
   app.use(helmet());
   app.use(cors());
   app.use(express.json());
@@ -24,6 +24,7 @@ export function createApp(): Application {
 
   app.use("/api/v1/auth", authRoutes);
   app.use("/api/users", userRoutes);
+  app.use("/api/teacher", teacherRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
