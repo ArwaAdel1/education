@@ -1,10 +1,46 @@
-import type { Request, Response, NextFunction } from "express";
-import { forgotPasswordSchema, registerSchema, resetPasswordSchema } from "./auth.validation.js";
-import { AuthService } from "./auth.service.js";
+import type { Request, Response, NextFunction } from 'express';
+import {
+  forgotPasswordSchema,
+  registerSchema,
+  resetPasswordSchema,
+} from './auth.validation.js';
+import { AuthService } from './auth.service.js';
 
 const authService = new AuthService();
 
 export class AuthController {
+  public login = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const parsed = loginSchema.safeParse(req.body);
+
+      if (!parsed.success) {
+        res.status(400).json({
+          success: false,
+          message: 'Validation error',
+          errors: parsed.error.flatten().fieldErrors,
+        });
+        return;
+      }
+
+      const result = await authService.loginUser(parsed.data);
+
+      res.status(200).json({
+        message: 'Login successful',
+        data: {
+          user: result.user,
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public register = async (
     req: Request,
     res: Response,
@@ -17,7 +53,7 @@ export class AuthController {
       if (!parsed.success) {
         res.status(400).json({
           success: false,
-          message: "Validation error",
+          message: 'Validation error',
           errors: parsed.error.flatten().fieldErrors,
         });
         return;
@@ -26,7 +62,7 @@ export class AuthController {
       const result = await authService.registerUser(parsed.data);
 
       res.status(201).json({
-        message: "Registration successful",
+        message: 'Registration successful',
         data: {
           user: result.user,
           accessToken: result.accessToken,
@@ -49,7 +85,7 @@ export class AuthController {
       if (!parsed.success) {
         res.status(400).json({
           success: false,
-          message: "Validation error",
+          message: 'Validation error',
           errors: parsed.error.flatten().fieldErrors,
         });
         return;
@@ -73,7 +109,7 @@ export class AuthController {
       if (!parsed.success) {
         res.status(400).json({
           success: false,
-          message: "Validation error",
+          message: 'Validation error',
           errors: parsed.error.flatten().fieldErrors,
         });
         return;
