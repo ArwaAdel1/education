@@ -90,7 +90,7 @@ export class AuthService {
         data: {
           fullName: input.fullName,
           mobile: input.mobile,
-          email: input.email ?? null,
+          email: input.email,
           password: hashedPassword,
           role: input.role === "OPERATION" ? Role.OPERATION : Role.STUDENT,
           status: Status.ACTIVE,

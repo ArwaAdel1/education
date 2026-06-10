@@ -20,6 +20,9 @@ const envSchema = z.object({
     .string()
     .regex(/^01[0-9]{9}$/)
     .default("01000000000"),
+  CLOUDINARY_CLOUD_NAME: z.string().min(1),
+  CLOUDINARY_API_KEY: z.string().min(1),
+  CLOUDINARY_API_SECRET: z.string().min(1),
 });
 
 export const env = envSchema.parse(process.env);

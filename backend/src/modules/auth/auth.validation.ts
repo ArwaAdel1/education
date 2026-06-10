@@ -20,11 +20,8 @@ export const registerSchema = z.object({
   mobile: z
     .string()
     .trim()
-    .regex(
-      /^(\+20|0)(10|11|12|15)[0-9]{8}$/,
-      "Invalid Egyptian phone number",
-    ),
-  email: z.string().trim().email("Invalid email address").toLowerCase().optional(),
+    .regex(/^(\+20|0)(10|11|12|15)[0-9]{8}$/, "Invalid Egyptian phone number"),
+  email: z.string().trim().email("Invalid email address").toLowerCase(),
   password: passwordSchema,
   role: z.enum(["STUDENT", "OPERATION"]).default("STUDENT"),
 });
@@ -40,19 +37,13 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export const forgotPasswordSchema = z.object({
   mobile: z
     .string()
-    .regex(
-      /^(\+20|0)(10|11|12|15)[0-9]{8}$/,
-      "Invalid Egyptian phone number",
-    ),
+    .regex(/^(\+20|0)(10|11|12|15)[0-9]{8}$/, "Invalid Egyptian phone number"),
 });
 
 export const resetPasswordSchema = z.object({
   mobile: z
     .string()
-    .regex(
-      /^(\+20|0)(10|11|12|15)[0-9]{8}$/,
-      "Invalid Egyptian phone number",
-    ),
+    .regex(/^(\+20|0)(10|11|12|15)[0-9]{8}$/, "Invalid Egyptian phone number"),
   otp: z
     .string()
     .length(6, "OTP must be 6 digits")

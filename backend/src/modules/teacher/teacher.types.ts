@@ -1,3 +1,5 @@
+import type { Role, Status } from "../../generated/prisma/client.js";
+
 export const teacherPublicFields = {
   id: true,
   userId: true,
@@ -8,3 +10,26 @@ export const teacherPublicFields = {
   createdAt: true,
   updatedAt: true,
 } as const;
+
+export interface TeacherProfileResponseDTO {
+  id: string;
+  userId: string;
+  subject: string | null;
+  bio: string | null;
+  photoUrl: string | null;
+  logoUrl: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  user: {
+    id: string;
+    fullName: string;
+    email: string;
+    mobile: string;
+    role: Role;
+    status: Status;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+}
+
+export type TeacherPublicFields = typeof teacherPublicFields;
