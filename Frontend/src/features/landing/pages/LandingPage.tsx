@@ -1,6 +1,7 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { motion, useInView } from 'framer-motion';
 import {
   Menu,
   X,
@@ -38,6 +39,41 @@ function toLocaleDigits(value: number | string, isRtl: boolean): string {
   const str = String(value);
   if (!isRtl) return str;
   return str.replace(/[0-9]/g, (d) => ARABIC_DIGITS[Number(d)]);
+}
+
+/**
+ * Counts up from 0 to `target` over `duration` ms using requestAnimationFrame.
+ * Only animates once `start` is true (i.e. the hero scrolled into view).
+ */
+function CountUp({
+  target,
+  duration = 1500,
+  isRtl,
+  start,
+}: {
+  target: number;
+  duration?: number;
+  isRtl: boolean;
+  start: boolean;
+}) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (!start) return;
+    let frame: number;
+    let startTime: number | null = null;
+    const tick = (now: number) => {
+      if (startTime === null) startTime = now;
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+      setValue(Math.round(eased * target));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [start, target, duration]);
+
+  return <>{toLocaleDigits(value, isRtl)}</>;
 }
 
 /** Lesson count + total minutes for a chapter, derived from mock lessons. */
@@ -227,49 +263,149 @@ function HeroSection({ isDesktop }: { isDesktop: boolean }) {
   const isRtl = useDirection() === 'rtl';
   const goRegister = () => navigate('/auth');
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { once: true });
+
   const stats = [
     { value: mockAnalytics.totalStudents, label: t('hero.stats.students') },
     { value: mockAnalytics.publishedChapters, label: t('hero.stats.chapters') },
     { value: mockAnalytics.quizzesCreated, label: t('hero.stats.quizzes') },
   ];
 
+  // Subtle 50px grid lines drawn with stacked repeating gradients.
+  const gridOverlay =
+    'repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 50px), ' +
+    'repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 50px)';
+
   return (
-    <section id="hero" className={cn(heroGradient, 'scroll-mt-16 px-4 py-12 md:py-20')}>
-      <div className="mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2 md:gap-12">
+    <section
+      ref={sectionRef}
+      id="hero"
+      className={cn(heroGradient, 'relative overflow-hidden scroll-mt-16 px-4 py-12 md:py-20')}
+    >
+      {/* Shimmer keyframes for the primary CTA (RTL: right → left, 3s slide + 2s pause). */}
+      <style>{`
+        @keyframes hero-shimmer {
+          0% { transform: translateX(150%); }
+          60% { transform: translateX(-150%); }
+          100% { transform: translateX(-150%); }
+        }
+        .hero-cta-shimmer { position: relative; overflow: hidden; }
+        .hero-cta-shimmer::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+          transform: translateX(150%);
+          animation: hero-shimmer 5s ease-in-out infinite;
+          pointer-events: none;
+        }
+      `}</style>
+
+      {/* Floating gradient blobs (behind content) */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute right-10 top-10 z-0 h-[400px] w-[400px] rounded-full bg-accent/15 blur-3xl"
+        animate={{ y: [0, -20, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute bottom-10 left-20 z-0 h-[300px] w-[300px] rounded-full bg-secondary/30 blur-3xl"
+        animate={{ y: [0, -15, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+      />
+
+      {/* Grid pattern overlay */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[1]"
+        style={{ backgroundImage: gridOverlay }}
+      />
+
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2 md:gap-12">
         {/* Content — right column in RTL */}
         <div className="flex flex-col items-center text-center md:items-start md:text-right">
-          <span className="font-cairo text-sm font-medium text-accent">{t('hero.breadcrumb')}</span>
-          <h1 className="mt-3 font-cairo text-2xl font-extrabold leading-tight text-white md:text-[40px]">
+          <motion.span
+            initial={{ opacity: 0, x: 30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="font-cairo text-sm font-medium text-accent"
+          >
+            {t('hero.breadcrumb')}
+          </motion.span>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-3 font-cairo text-2xl font-extrabold leading-tight text-white md:text-[40px]"
+          >
             {t('hero.academyName')}
-          </h1>
-          <p className="mt-2 font-cairo text-lg text-white/80">{t('hero.teacherName')}</p>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-2 font-cairo text-lg text-white/80"
+          >
+            {t('hero.teacherName')}
+          </motion.p>
 
           {isDesktop && (
-            <p className="mt-4 max-w-lg font-cairo text-base leading-relaxed text-white/60">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="mt-4 max-w-lg font-cairo text-base leading-relaxed text-white/60"
+            >
               {t('hero.bio')}
-            </p>
+            </motion.p>
           )}
 
           {isDesktop ? (
             <>
-              <div className="mt-8 flex gap-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.5 }}
+                className="mt-8 flex gap-8"
+              >
                 {stats.map((stat) => (
                   <div key={stat.label} className="flex flex-col">
                     <span className="font-cairo text-2xl font-bold text-white">
-                      {toLocaleDigits(stat.value, isRtl)}
+                      <CountUp target={stat.value} isRtl={isRtl} start={inView} />
                     </span>
                     <span className="font-cairo text-sm text-white/50">{stat.label}</span>
                   </div>
                 ))}
-              </div>
-              <Button size="lg" className="mt-8 rounded-full" onClick={goRegister}>
-                <GraduationCap size={20} />
-                {t('hero.cta')}
-              </Button>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={inView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.4, delay: 0.7 }}
+              >
+                <Button
+                  size="lg"
+                  className="hero-cta-shimmer mt-8 rounded-full"
+                  onClick={goRegister}
+                >
+                  <GraduationCap size={20} />
+                  {t('hero.cta')}
+                </Button>
+              </motion.div>
             </>
           ) : (
-            <div className="mt-6 flex w-full flex-col gap-3">
-              <Button size="lg" className="w-full rounded-full" onClick={goRegister}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.4, delay: 0.7 }}
+              className="mt-6 flex w-full flex-col gap-3"
+            >
+              <Button
+                size="lg"
+                className="hero-cta-shimmer w-full rounded-full"
+                onClick={goRegister}
+              >
                 {t('hero.ctaSubscribe')}
               </Button>
               <Button
@@ -280,32 +416,49 @@ function HeroSection({ isDesktop }: { isDesktop: boolean }) {
               >
                 {t('hero.ctaTrial')}
               </Button>
-            </div>
+            </motion.div>
           )}
         </div>
 
         {/* Teacher photo — left column in RTL */}
         <div className="flex flex-col items-center">
-          <img
-            src="/images/hero.png"
-            alt={t('hero.photoAlt')}
-            className="aspect-[4/5] w-full max-w-[300px] rounded-card object-cover shadow-2xl md:max-w-[400px]"
-          />
+          <div className="relative w-full max-w-[300px] md:max-w-[400px]">
+            <motion.img
+              src="/images/hero.png"
+              alt={t('hero.photoAlt')}
+              initial={{ opacity: 0, x: -40 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+              whileHover={isDesktop ? { scale: 1.02, transition: { duration: 0.3 } } : undefined}
+              className="aspect-[4/5] w-full rounded-card object-cover shadow-2xl ring-2 ring-accent/20 ring-offset-4 ring-offset-transparent"
+            />
+            {/* Gradient overlay at the bottom of the photo */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 rounded-b-card bg-gradient-to-t from-primary/40 to-transparent" />
+          </div>
 
           {!isDesktop && (
-            <div className="mt-6 flex w-full gap-3">
+            <motion.div
+              className="mt-6 flex w-full gap-3"
+              initial="hidden"
+              animate={inView ? 'visible' : 'hidden'}
+              variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+            >
               {stats.map((stat) => (
-                <div
+                <motion.div
                   key={stat.label}
-                  className="flex flex-1 flex-col items-center rounded-lg bg-white/10 p-3 text-center"
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  className="flex flex-1 flex-col items-center rounded-xl border border-white/15 bg-white/10 p-3 text-center backdrop-blur-md"
                 >
                   <span className="font-cairo text-xl font-bold text-white">
-                    {toLocaleDigits(stat.value, isRtl)}
+                    <CountUp target={stat.value} isRtl={isRtl} start={inView} />
                   </span>
                   <span className="font-cairo text-xs text-white/50">{stat.label}</span>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           )}
         </div>
       </div>
