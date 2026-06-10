@@ -6,6 +6,7 @@ import { userPublicFields } from "../users/user.types.js";
 import { TokenService } from "./token.service.js";
 import type {
   RegisterInput,
+  LoginInput,
   ForgotPasswordInput,
   ResetPasswordInput,
 } from "./auth.validation.js";
@@ -13,6 +14,48 @@ import type { ApiError } from "../../shared/types/common.types.js";
 
 export class AuthService {
   constructor(private readonly tokenService = new TokenService()) {}
+
+  public async loginUser(input: LoginInput) {
+    const user = await prisma.user.findUnique({
+      where: { email: input.email },
+    });
+
+    if (!user) {
+      const error = new Error("Invalid email or password") as ApiError;
+      error.status = 401;
+      throw error;
+    }
+
+    if (user.status === "INACTIVE" || user.status === "BANNED") {
+      const error = new Error(
+        "Account is inactive. Contact support.",
+      ) as ApiError;
+      error.status = 403;
+      throw error;
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      input.password,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
+      const error = new Error("Invalid email or password") as ApiError;
+      error.status = 401;
+      throw error;
+    }
+
+    const accessToken = this.tokenService.generateAccessToken(user.id);
+    const refreshToken = this.tokenService.generateRefreshToken(user.id);
+
+    await prisma.refreshToken.create({
+      data: { token: refreshToken, userId: user.id },
+    });
+
+    const { password: _, ...safeUser } = user;
+
+    return { user: safeUser, accessToken, refreshToken };
+  }
 
   public async registerUser(input: RegisterInput) {
     // Check mobile uniqueness
