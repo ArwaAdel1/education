@@ -1,12 +1,29 @@
-import { apiClient } from '../client';
+// src/lib/api/endpoints/auth.ts
+import { apiClient } from "@/lib/api/client";
+import type { AuthResponse, RegisterPayload } from "@/types/user";
 
 export const authApi = {
-  login: (email: string, password: string) =>
-    apiClient.post('/auth/login', { email, password }),
-  register: (data: { name: string; email: string; password: string; role: string }) =>
-    apiClient.post('/auth/register', data),
-  forgotPassword: (email: string) =>
-    apiClient.post('/auth/forgot-password', { email }),
-  resetPassword: (token: string, password: string) =>
-    apiClient.post('/auth/reset-password', { token, password }),
+  login(email: string, password: string): Promise<AuthResponse> {
+    return apiClient
+      .post<{ message: string; data: AuthResponse }>("/v1/auth/login", { email, password })
+      .then((res) => res.data.data);
+  },
+
+  register(data: RegisterPayload): Promise<AuthResponse> {
+    return apiClient
+      .post<{ message: string; data: AuthResponse }>("/v1/auth/register", data)
+      .then((res) => res.data.data);
+  },
+
+  forgotPassword(email: string): Promise<{ message: string }> {
+    return apiClient
+      .post<{ message: string }>("/v1/auth/forgot-password", { email })
+      .then((res) => res.data);
+  },
+
+  resetPassword(token: string, password: string): Promise<{ message: string }> {
+    return apiClient
+      .post<{ message: string }>("/v1/auth/reset-password", { token, password })
+      .then((res) => res.data);
+  },
 };

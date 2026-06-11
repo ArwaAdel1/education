@@ -14,7 +14,7 @@ const sizeClasses: Record<NonNullable<AvatarProps['size']>, string> = {
 };
 
 export function Avatar({ src, name, size = 'md', className }: AvatarProps) {
-  const initial = name.trim().charAt(0).toUpperCase();
+ const initial = (name ?? "").trim().charAt(0).toUpperCase() || "?";
 
   if (src) {
     return (

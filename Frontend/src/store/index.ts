@@ -8,12 +8,12 @@ import teacherReducer from './slices/teacherSlice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    tenant: tenantReducer,
     ui: uiReducer,
     toast: toastReducer,
     teacher: teacherReducer,
+    tenant: tenantReducer,
   },
 });
 
-export type { RootState, AppThunk } from './types';
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
