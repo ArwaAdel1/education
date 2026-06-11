@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CreditCard, Ticket } from 'lucide-react';
 import { Button, Card, Input } from '@/components/ui';
-import { useToastStore } from '@/store/toastStore';
+import { addToast } from '@/store/slices/toastSlice';
+import { useAppDispatch } from '@/store/hooks';
 import { mockChapters } from '@/mocks/content';
 import { formatEGP } from '@/lib/utils/formatCurrency';
 
@@ -10,7 +11,7 @@ const chapter = mockChapters.find((item) => !item.isUnlocked) ?? mockChapters[0]
 
 export function PaymentPage() {
   const { t } = useTranslation();
-  const addToast = useToastStore((state) => state.addToast);
+  const dispatch = useAppDispatch();
   const [promoCode, setPromoCode] = useState('');
 
   return (
@@ -33,7 +34,7 @@ export function PaymentPage() {
             {t('student:payment.payWithCard')}
           </h2>
         </div>
-        <Button onClick={() => addToast({ type: 'info', message: 'جارٍ تحويلك لبوابة الدفع...' })}>
+        <Button onClick={() => dispatch(addToast({ type: 'info', message: 'جارٍ تحويلك لبوابة الدفع...' }))}>
           {t('student:payment.payWithCard')}
         </Button>
       </Card>
@@ -55,7 +56,7 @@ export function PaymentPage() {
           />
           <Button
             variant="secondary"
-            onClick={() => addToast({ type: 'success', message: t('student:payment.success') })}
+            onClick={() => dispatch(addToast({ type: 'success', message: t('student:payment.success') }))}
           >
             {t('student:payment.apply')}
           </Button>

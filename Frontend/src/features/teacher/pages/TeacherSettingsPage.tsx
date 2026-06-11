@@ -15,8 +15,8 @@ import {
 import { Button, Card } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { useToastStore } from '@/store/toastStore';
-import { cn } from '@/lib/utils/cn';
+import { addToast } from '@/store/slices/toastSlice';
+import { useAppDispatch } from '@/store/hooks';
 
 /* ------------------------------------------------------------------ */
 /* Helpers                                                             */
@@ -144,8 +144,8 @@ export function TeacherSettingsPage() {
 
 function PersonalInfoCard() {
   const { t } = useTranslation('teacher');
+  const dispatch = useAppDispatch();
   const { user } = useAuth();
-  const addToast = useToastStore((state) => state.addToast);
   const photoInputRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState(user?.name ?? '');
@@ -166,13 +166,13 @@ function PersonalInfoCard() {
     setTimeout(() => {
       setBaseline({ name, email, phone });
       setSaving(false);
-      addToast({ type: 'success', message: t('settings.saved') });
+      dispatch(addToast({ type: 'success', message: t('settings.saved') }));
     }, 600);
   };
 
   const handlePhotoChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
-      addToast({ type: 'success', message: t('settings.saved') });
+      dispatch(addToast({ type: 'success', message: t('settings.saved') }));
     }
   };
 
@@ -281,7 +281,7 @@ const BIO_MAX_LENGTH = 500;
 
 function TeachingInfoCard() {
   const { t } = useTranslation('teacher');
-  const addToast = useToastStore((state) => state.addToast);
+  const dispatch = useAppDispatch();
 
   const subjectOptions = t('settings.teaching.subjectOptions', { returnObjects: true }) as string[];
 
@@ -297,7 +297,7 @@ function TeachingInfoCard() {
     setTimeout(() => {
       setBaseline({ subject, bio });
       setSaving(false);
-      addToast({ type: 'success', message: t('settings.saved') });
+      dispatch(addToast({ type: 'success', message: t('settings.saved') }));
     }, 600);
   };
 
@@ -374,17 +374,17 @@ function TeachingInfoCard() {
 
 function AcademyBrandingCard({ isDesktop }: { isDesktop: boolean }) {
   const { t } = useTranslation('teacher');
-  const addToast = useToastStore((state) => state.addToast);
+  const dispatch = useAppDispatch();
   const logoInputRef = useRef<HTMLInputElement>(null);
 
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
-      addToast({ type: 'success', message: t('settings.saved') });
+      dispatch(addToast({ type: 'success', message: t('settings.saved') }));
     }
   };
 
   const handleApply = () => {
-    addToast({ type: 'success', message: t('settings.saved') });
+    dispatch(addToast({ type: 'success', message: t('settings.saved') }));
   };
 
   return (

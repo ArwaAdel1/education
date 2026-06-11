@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuthStore } from '@/store/authStore';
+import { useAppSelector } from '@/store/hooks';
 import type { UserRole } from '@/types';
 
 const roleHomePath: Record<UserRole, string> = {
@@ -14,7 +14,7 @@ interface RoleGuardProps {
 }
 
 export function RoleGuard({ allowedRoles }: RoleGuardProps) {
-  const user = useAuthStore((state) => state.user);
+  const user = useAppSelector((state) => state.auth.user);
 
   if (!user) {
     return <Navigate to="/auth" replace />;

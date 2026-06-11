@@ -1,11 +1,11 @@
 import { BookOpen } from 'lucide-react';
 import { Avatar, Card } from '@/components/ui';
-import { useAuthStore } from '@/store/authStore';
+import { useAppSelector } from '@/store/hooks';
 import { mockChapters } from '@/mocks/content';
 import { mockEnrollments } from '@/mocks/enrollment';
 
 export function StudentProfilePage() {
-  const user = useAuthStore((state) => state.user);
+  const user = useAppSelector((state) => state.auth.user);
 
   const enrolledChapters = mockEnrollments
     .filter((enrollment) => enrollment.studentId === (user?.id ?? 'user-1'))
