@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   User,
@@ -12,11 +12,22 @@ import {
   Upload,
   type LucideIcon,
 } from 'lucide-react';
-import { Button, Card } from '@/components/ui';
-import { useAuth } from '@/hooks/useAuth';
+import { Button, Card, Skeleton, Spinner } from '@/components/ui';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { addToast } from '@/store/slices/toastSlice';
-import { useAppDispatch } from '@/store/hooks';
+import {
+  fetchTeacherProfile,
+  updateTeacherProfile,
+  uploadTeacherPhoto,
+  uploadTeacherLogo,
+} from '@/store/slices/teacherSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import {
+  updateTeacherProfileSchema,
+  zodToFieldErrors,
+  normalizeMobile,
+  MAX_FILE_SIZE,
+} from '../validation';
 
 /* ------------------------------------------------------------------ */
 /* Helpers                                                             */
@@ -34,11 +45,6 @@ function getInitials(name: string): string {
     .slice(0, 2)
     .map((word) => word.charAt(0))
     .join('');
-}
-
-/** Strip a leading +20 / 20 / 0 country prefix so only the local number is edited. */
-function stripCountryCode(phone: string): string {
-  return phone.replace(/^\+?20/, '').replace(/^0/, '');
 }
 
 interface SectionHeaderProps {
@@ -79,6 +85,7 @@ interface TextFieldProps {
   placeholder?: string;
   inputMode?: 'text' | 'email' | 'tel';
   dir?: 'rtl' | 'ltr';
+  error?: string;
 }
 
 /** Labelled input with a leading (inline-start) icon, accent focus ring. */
@@ -91,6 +98,7 @@ function TextField({
   placeholder,
   inputMode,
   dir,
+  error,
 }: TextFieldProps) {
   return (
     <div>
@@ -107,9 +115,14 @@ function TextField({
           value={value}
           onChange={(event) => onChange(event.target.value)}
           placeholder={placeholder}
-          className="h-[48px] w-full rounded-input border border-border bg-surface pe-3 ps-10 font-cairo text-base text-text-primary outline-none transition-colors placeholder:text-text-secondary/50 focus:border-accent focus:ring-2 focus:ring-accent/20"
+          className={`h-[48px] w-full rounded-input border bg-surface pe-3 ps-10 font-cairo text-base text-text-primary outline-none transition-colors placeholder:text-text-secondary/50 focus:ring-2 ${
+            error
+              ? 'border-danger focus:border-danger focus:ring-danger/20'
+              : 'border-border focus:border-accent focus:ring-accent/20'
+          }`}
         />
       </div>
+      {error && <p className="mt-1 font-cairo text-xs text-danger">{error}</p>}
     </div>
   );
 }
@@ -121,6 +134,15 @@ function TextField({
 export function TeacherSettingsPage() {
   const { t } = useTranslation('teacher');
   const isDesktop = useMediaQuery('(min-width: 768px)');
+  const dispatch = useAppDispatch();
+
+  const profile = useAppSelector((state) => state.teacher.profile);
+  const loading = useAppSelector((state) => state.teacher.loading);
+  const error = useAppSelector((state) => state.teacher.error);
+
+  useEffect(() => {
+    dispatch(fetchTeacherProfile());
+  }, [dispatch]);
 
   return (
     <div className="mx-auto w-full max-w-4xl">
@@ -129,11 +151,47 @@ export function TeacherSettingsPage() {
         <p className="mt-1 font-cairo text-sm text-text-secondary">{t('settings.pageSubtitle')}</p>
       </div>
 
-      <div className="flex flex-col gap-6">
-        <PersonalInfoCard />
-        <TeachingInfoCard />
-        <AcademyBrandingCard isDesktop={isDesktop} />
-      </div>
+      {loading && !profile ? (
+        <SettingsSkeleton />
+      ) : !profile ? (
+        <Card padding="none" className="p-6 md:p-8">
+          <p className="text-center font-cairo text-sm text-danger">
+            {error ?? t('settings.loadError', 'تعذّر تحميل بيانات الحساب')}
+          </p>
+          <div className="mt-4 flex justify-center">
+            <Button size="sm" onClick={() => dispatch(fetchTeacherProfile())}>
+              {t('settings.retry', 'إعادة المحاولة')}
+            </Button>
+          </div>
+        </Card>
+      ) : (
+        <div className="flex flex-col gap-6">
+          <PersonalInfoCard />
+          <TeachingInfoCard />
+          <AcademyBrandingCard isDesktop={isDesktop} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Loading placeholder mirroring the three settings cards. */
+function SettingsSkeleton() {
+  return (
+    <div className="flex flex-col gap-6">
+      {[0, 1, 2].map((card) => (
+        <Card key={card} padding="none" className="p-6 md:p-8">
+          <div className="mb-6 flex items-center gap-3">
+            <Skeleton className="h-10 w-10 rounded-full" />
+            <Skeleton className="h-5 w-40" />
+          </div>
+          <div className="flex flex-col gap-4">
+            <Skeleton className="h-[48px] w-full" />
+            <Skeleton className="h-[48px] w-full" />
+            <Skeleton className="h-24 w-full" />
+          </div>
+        </Card>
+      ))}
     </div>
   );
 }
@@ -145,35 +203,88 @@ export function TeacherSettingsPage() {
 function PersonalInfoCard() {
   const { t } = useTranslation('teacher');
   const dispatch = useAppDispatch();
-  const { user } = useAuth();
   const photoInputRef = useRef<HTMLInputElement>(null);
 
-  const [name, setName] = useState(user?.name ?? '');
-  const [email, setEmail] = useState(user?.email ?? '');
-  const [phone, setPhone] = useState(stripCountryCode(user?.phone ?? ''));
-  const [baseline, setBaseline] = useState({
-    name: user?.name ?? '',
-    email: user?.email ?? '',
-    phone: stripCountryCode(user?.phone ?? ''),
-  });
-  const [saving, setSaving] = useState(false);
+  const profile = useAppSelector((state) => state.teacher.profile);
+  const saving = useAppSelector((state) => state.teacher.saving);
+  const uploadingPhoto = useAppSelector((state) => state.teacher.uploadingPhoto);
+  const fieldErrors = useAppSelector((state) => state.teacher.fieldErrors);
 
-  const isDirty = name !== baseline.name || email !== baseline.email || phone !== baseline.phone;
-  const initials = getInitials(name || user?.name || '؟');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  // `mobile` holds the full canonical number, e.g. "01012345678".
+  const [mobile, setMobile] = useState('');
+  const [baseline, setBaseline] = useState({ name: '', email: '', mobile: '' });
+  // Client-side validation errors, keyed by backend field name.
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const clearError = (field: string) => setErrors((prev) => ({ ...prev, [field]: '' }));
+
+  // Hydrate the form once from the loaded profile (and re-hydrate if the
+  // underlying user changes). We intentionally do not re-sync on every
+  // profile update so the user's in-progress edits are preserved.
+  const hydratedUserId = useRef<string | null>(null);
+  useEffect(() => {
+    if (profile && hydratedUserId.current !== profile.userId) {
+      hydratedUserId.current = profile.userId;
+      const init = {
+        name: profile.user.fullName ?? '',
+        email: profile.user.email ?? '',
+        mobile: normalizeMobile(profile.user.mobile ?? ''),
+      };
+      setName(init.name);
+      setEmail(init.email);
+      setMobile(init.mobile);
+      setBaseline(init);
+    }
+  }, [profile]);
+
+  // The input edits only the local digits after the leading 0 (the +20 prefix is UI-only).
+  const localPhone = mobile.replace(/^0/, '');
+  const isDirty = name !== baseline.name || email !== baseline.email || mobile !== baseline.mobile;
+  const initials = getInitials(name || profile?.user.fullName || '؟');
 
   const handleSave = () => {
-    setSaving(true);
-    setTimeout(() => {
-      setBaseline({ name, email, phone });
-      setSaving(false);
-      dispatch(addToast({ type: 'success', message: t('settings.saved') }));
-    }, 600);
+    const payload = {
+      fullName: name.trim(),
+      email: email.trim().toLowerCase(),
+      mobile,
+    };
+
+    const result = updateTeacherProfileSchema.safeParse(payload);
+    if (!result.success) {
+      setErrors(zodToFieldErrors(result.error));
+      return;
+    }
+    setErrors({});
+
+    dispatch(updateTeacherProfile(result.data))
+      .unwrap()
+      .then(() => {
+        setBaseline({ name, email, mobile });
+        dispatch(addToast({ type: 'success', message: t('settings.saved') }));
+      })
+      .catch((err: { message?: string }) => {
+        dispatch(addToast({ type: 'error', message: err?.message ?? t('settings.saveError', 'تعذّر حفظ التعديلات') }));
+      });
   };
 
   const handlePhotoChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.length) {
-      dispatch(addToast({ type: 'success', message: t('settings.saved') }));
+    const file = event.target.files?.[0];
+    event.target.value = ''; // allow re-selecting the same file
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE) {
+      dispatch(addToast({ type: 'error', message: 'حجم الملف أكبر من ٥ ميجا' }));
+      return;
     }
+
+    dispatch(uploadTeacherPhoto(file))
+      .unwrap()
+      .then(() => dispatch(addToast({ type: 'success', message: t('settings.saved') })))
+      .catch((err: { message?: string }) =>
+        dispatch(addToast({ type: 'error', message: err?.message ?? 'حصل مشكلة في رفع الصورة' })),
+      );
   };
 
   return (
@@ -194,19 +305,25 @@ function PersonalInfoCard() {
       <div className="mb-6 flex flex-col items-center">
         <div className="relative">
           <div className="h-20 w-20 overflow-hidden rounded-full border-2 border-border">
-            {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt={name} className="h-full w-full object-cover" />
+            {profile?.photoUrl ? (
+              <img src={profile.photoUrl} alt={name} className="h-full w-full object-cover" />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-secondary font-cairo text-xl font-bold text-white">
                 {initials}
+              </div>
+            )}
+            {uploadingPhoto && (
+              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40">
+                <Spinner size="sm" className="text-white" />
               </div>
             )}
           </div>
           <button
             type="button"
             onClick={() => photoInputRef.current?.click()}
+            disabled={uploadingPhoto}
             aria-label={t('settings.personal.changePhoto')}
-            className="absolute bottom-0 end-0 flex h-7 w-7 items-center justify-center rounded-full bg-accent text-white shadow-sm transition-colors hover:bg-accent/90"
+            className="absolute bottom-0 end-0 flex h-7 w-7 items-center justify-center rounded-full bg-accent text-white shadow-sm transition-colors hover:bg-accent/90 disabled:opacity-50"
           >
             <Camera size={14} />
           </button>
@@ -214,7 +331,8 @@ function PersonalInfoCard() {
         <button
           type="button"
           onClick={() => photoInputRef.current?.click()}
-          className="mt-2 cursor-pointer font-cairo text-sm text-accent transition-colors hover:underline"
+          disabled={uploadingPhoto}
+          className="mt-2 cursor-pointer font-cairo text-sm text-accent transition-colors hover:underline disabled:opacity-50"
         >
           {t('settings.personal.changePhoto')}
         </button>
@@ -234,8 +352,12 @@ function PersonalInfoCard() {
           label={t('settings.personal.fullName')}
           icon={User}
           value={name}
-          onChange={setName}
+          onChange={(value) => {
+            setName(value);
+            clearError('fullName');
+          }}
           placeholder={t('settings.personal.fullNamePlaceholder')}
+          error={errors.fullName || fieldErrors?.fullName?.[0]}
         />
         <TextField
           label={t('settings.personal.email')}
@@ -244,8 +366,12 @@ function PersonalInfoCard() {
           inputMode="email"
           dir="ltr"
           value={email}
-          onChange={setEmail}
+          onChange={(value) => {
+            setEmail(value);
+            clearError('email');
+          }}
           placeholder={t('settings.personal.emailPlaceholder')}
+          error={errors.email || fieldErrors?.email?.[0]}
         />
 
         {/* Mobile number with country code (full width) */}
@@ -253,7 +379,13 @@ function PersonalInfoCard() {
           <label className="mb-1.5 block font-cairo text-sm font-medium text-text-primary">
             {t('settings.personal.mobile')}
           </label>
-          <div className="flex h-[48px] overflow-hidden rounded-input border border-border focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20">
+          <div
+            className={`flex h-[48px] overflow-hidden rounded-input border focus-within:ring-2 ${
+              errors.mobile || fieldErrors?.mobile?.[0]
+                ? 'border-danger focus-within:border-danger focus-within:ring-danger/20'
+                : 'border-border focus-within:border-accent focus-within:ring-accent/20'
+            }`}
+          >
             <div className="flex items-center gap-1 border-e border-border bg-background px-3">
               <Phone size={16} className="text-text-secondary" />
               <span className="font-cairo text-sm text-text-secondary">+20</span>
@@ -261,12 +393,21 @@ function PersonalInfoCard() {
             <input
               dir="ltr"
               inputMode="tel"
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
+              value={localPhone}
+              onChange={(event) => {
+                const localDigits = event.target.value.replace(/\D/g, '').slice(0, 10);
+                setMobile(localDigits ? `0${localDigits}` : '');
+                clearError('mobile');
+              }}
               placeholder={t('settings.personal.mobilePlaceholder')}
               className="flex-1 bg-transparent px-3 font-cairo text-base text-text-primary outline-none placeholder:text-text-secondary/50"
             />
           </div>
+          {(errors.mobile || fieldErrors?.mobile?.[0]) && (
+            <p className="mt-1 font-cairo text-xs text-danger">
+              {errors.mobile || fieldErrors?.mobile?.[0]}
+            </p>
+          )}
         </div>
       </div>
     </Card>
@@ -283,22 +424,58 @@ function TeachingInfoCard() {
   const { t } = useTranslation('teacher');
   const dispatch = useAppDispatch();
 
+  const profile = useAppSelector((state) => state.teacher.profile);
+  const saving = useAppSelector((state) => state.teacher.saving);
+
   const subjectOptions = t('settings.teaching.subjectOptions', { returnObjects: true }) as string[];
 
-  const [subject, setSubject] = useState(subjectOptions[0] ?? '');
+  const [subject, setSubject] = useState('');
   const [bio, setBio] = useState('');
-  const [baseline, setBaseline] = useState({ subject: subjectOptions[0] ?? '', bio: '' });
-  const [saving, setSaving] = useState(false);
+  const [baseline, setBaseline] = useState({ subject: '', bio: '' });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const clearError = (field: string) => setErrors((prev) => ({ ...prev, [field]: '' }));
+
+  const hydratedUserId = useRef<string | null>(null);
+  useEffect(() => {
+    if (profile && hydratedUserId.current !== profile.userId) {
+      hydratedUserId.current = profile.userId;
+      const init = {
+        subject: profile.subject ?? subjectOptions[0] ?? '',
+        bio: profile.bio ?? '',
+      };
+      setSubject(init.subject);
+      setBio(init.bio);
+      setBaseline(init);
+    }
+  }, [profile, subjectOptions]);
+
+  // Ensure a stored subject that is not one of the predefined options is still
+  // selectable (otherwise a controlled <select> renders empty).
+  const options =
+    subject && !subjectOptions.includes(subject) ? [subject, ...subjectOptions] : subjectOptions;
 
   const isDirty = subject !== baseline.subject || bio !== baseline.bio;
 
   const handleSave = () => {
-    setSaving(true);
-    setTimeout(() => {
-      setBaseline({ subject, bio });
-      setSaving(false);
-      dispatch(addToast({ type: 'success', message: t('settings.saved') }));
-    }, 600);
+    const payload = { subject, bio: bio.trim() };
+
+    const result = updateTeacherProfileSchema.safeParse(payload);
+    if (!result.success) {
+      setErrors(zodToFieldErrors(result.error));
+      return;
+    }
+    setErrors({});
+
+    dispatch(updateTeacherProfile(result.data))
+      .unwrap()
+      .then(() => {
+        setBaseline({ subject, bio });
+        dispatch(addToast({ type: 'success', message: t('settings.saved') }));
+      })
+      .catch((err: { message?: string }) => {
+        dispatch(addToast({ type: 'error', message: err?.message ?? t('settings.saveError', 'تعذّر حفظ التعديلات') }));
+      });
   };
 
   return (
@@ -331,7 +508,7 @@ function TeachingInfoCard() {
               onChange={(event) => setSubject(event.target.value)}
               className="h-[48px] w-full appearance-none rounded-input border border-border bg-surface pe-10 ps-10 font-cairo text-base text-text-primary outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
             >
-              {subjectOptions.map((option) => (
+              {options.map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
@@ -353,11 +530,23 @@ function TeachingInfoCard() {
             rows={5}
             maxLength={BIO_MAX_LENGTH}
             value={bio}
-            onChange={(event) => setBio(event.target.value)}
+            onChange={(event) => {
+              setBio(event.target.value);
+              clearError('bio');
+            }}
             placeholder={t('settings.teaching.bioPlaceholder')}
-            className="w-full rounded-input border border-border bg-surface p-3 font-cairo text-base text-text-primary outline-none transition-colors placeholder:text-text-secondary/50 focus:border-accent focus:ring-2 focus:ring-accent/20"
+            className={`w-full rounded-input border bg-surface p-3 font-cairo text-base text-text-primary outline-none transition-colors placeholder:text-text-secondary/50 focus:ring-2 ${
+              errors.bio
+                ? 'border-danger focus:border-danger focus:ring-danger/20'
+                : 'border-border focus:border-accent focus:ring-accent/20'
+            }`}
           />
-          <div className="flex justify-end">
+          <div className="flex items-center justify-between">
+            {errors.bio ? (
+              <span className="mt-1 font-cairo text-xs text-danger">{errors.bio}</span>
+            ) : (
+              <span />
+            )}
             <span className="mt-1 font-cairo text-xs text-text-secondary">
               {bio.length}/{BIO_MAX_LENGTH}
             </span>
@@ -377,14 +566,29 @@ function AcademyBrandingCard({ isDesktop }: { isDesktop: boolean }) {
   const dispatch = useAppDispatch();
   const logoInputRef = useRef<HTMLInputElement>(null);
 
+  const profile = useAppSelector((state) => state.teacher.profile);
+  const uploadingLogo = useAppSelector((state) => state.teacher.uploadingLogo);
+
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.length) {
-      dispatch(addToast({ type: 'success', message: t('settings.saved') }));
+    const file = event.target.files?.[0];
+    event.target.value = ''; // allow re-selecting the same file
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE) {
+      dispatch(addToast({ type: 'error', message: 'حجم الملف أكبر من ٥ ميجا' }));
+      return;
     }
+
+    dispatch(uploadTeacherLogo(file))
+      .unwrap()
+      .then(() => dispatch(addToast({ type: 'success', message: t('settings.saved') })))
+      .catch((err: { message?: string }) =>
+        dispatch(addToast({ type: 'error', message: err?.message ?? 'حصل مشكلة في رفع الصورة' })),
+      );
   };
 
   const handleApply = () => {
-    dispatch(addToast({ type: 'success', message: t('settings.saved') }));
+    logoInputRef.current?.click();
   };
 
   return (
@@ -400,15 +604,22 @@ function AcademyBrandingCard({ isDesktop }: { isDesktop: boolean }) {
           <button
             type="button"
             onClick={() => logoInputRef.current?.click()}
-            className="flex h-[180px] w-full cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed border-border bg-background transition-colors hover:border-accent/50"
+            disabled={uploadingLogo}
+            className="flex h-[180px] w-full cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed border-border bg-background transition-colors hover:border-accent/50 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <Upload size={32} className="text-accent" />
-            <p className="mt-3 font-cairo text-sm text-text-secondary">
-              {t('settings.branding.uploadText')}
-            </p>
-            <p className="mt-1 font-cairo text-xs text-text-secondary/60">
-              {t('settings.branding.uploadHint')}
-            </p>
+            {uploadingLogo ? (
+              <Spinner size="lg" />
+            ) : (
+              <>
+                <Upload size={32} className="text-accent" />
+                <p className="mt-3 font-cairo text-sm text-text-secondary">
+                  {t('settings.branding.uploadText')}
+                </p>
+                <p className="mt-1 font-cairo text-xs text-text-secondary/60">
+                  {t('settings.branding.uploadHint')}
+                </p>
+              </>
+            )}
           </button>
           <input
             ref={logoInputRef}
@@ -429,7 +640,15 @@ function AcademyBrandingCard({ isDesktop }: { isDesktop: boolean }) {
               {t('settings.branding.previewLabel')}
             </p>
             <div className="flex items-center gap-2 rounded-input bg-surface p-3 shadow-sm">
-              <div className="h-8 w-8 rounded-md bg-secondary/20" />
+              {profile?.logoUrl ? (
+                <img
+                  src={profile.logoUrl}
+                  alt={t('settings.branding.academyName')}
+                  className="h-8 w-8 rounded-md object-cover"
+                />
+              ) : (
+                <div className="h-8 w-8 rounded-md bg-secondary/20" />
+              )}
               <span className="font-cairo text-sm text-text-secondary">
                 {t('settings.branding.academyName')}
               </span>
@@ -449,7 +668,7 @@ function AcademyBrandingCard({ isDesktop }: { isDesktop: boolean }) {
       </div>
 
       {!isDesktop && (
-        <Button className="mt-6 w-full" size="lg" onClick={handleApply}>
+        <Button className="mt-6 w-full" size="lg" loading={uploadingLogo} onClick={handleApply}>
           {t('settings.branding.applyBtn')}
         </Button>
       )}

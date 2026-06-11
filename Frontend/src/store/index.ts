@@ -3,6 +3,7 @@ import authReducer from './slices/authSlice';
 import tenantReducer from './slices/tenantSlice';
 import uiReducer from './slices/uiSlice';
 import toastReducer from './slices/toastSlice';
+import teacherReducer from './slices/teacherSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     tenant: tenantReducer,
     ui: uiReducer,
     toast: toastReducer,
+    teacher: teacherReducer,
   },
 });
 
