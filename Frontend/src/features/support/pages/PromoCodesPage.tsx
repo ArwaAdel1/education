@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react';
 import { Badge, Button, Table } from '@/components/ui';
-import { useToastStore } from '@/store/toastStore';
+import { addToast } from '@/store/slices/toastSlice';
+import { useAppDispatch } from '@/store/hooks';
 import { mockPromoCodes } from '@/mocks/promoCodes';
 import { mockStudents } from '@/mocks/users';
 import { formatDate } from '@/lib/utils/formatDate';
@@ -12,13 +13,13 @@ function studentName(studentId?: string): string {
 }
 
 export function PromoCodesPage() {
-  const addToast = useToastStore((state) => state.addToast);
+  const dispatch = useAppDispatch();
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-cairo text-2xl font-bold text-text-primary">أكواد الخصم</h1>
-        <Button onClick={() => addToast({ type: 'success', message: 'تم إنشاء كود خصم جديد' })}>
+        <Button onClick={() => dispatch(addToast({ type: 'success', message: 'تم إنشاء كود خصم جديد' }))}>
           <Plus size={18} />
           إنشاء كود جديد
         </Button>

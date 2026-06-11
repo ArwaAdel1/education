@@ -1,7 +1,8 @@
 import { Menu, LogOut } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useAuthStore } from '@/store/authStore';
-import { useUIStore } from '@/store/uiStore';
+import { logout } from '@/store/slices/authSlice';
+import { toggleSidebar } from '@/store/slices/uiSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { Avatar, Button } from '@/components/ui';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 
@@ -12,9 +13,8 @@ interface TopbarProps {
 
 export function Topbar({ showMenu = true }: TopbarProps) {
   const { t } = useTranslation();
-  const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
-  const toggleSidebar = useUIStore((state) => state.toggleSidebar);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
 
   return (
     <header className="flex h-16 items-center justify-between border-b border-border bg-surface px-4">
@@ -22,7 +22,7 @@ export function Topbar({ showMenu = true }: TopbarProps) {
         {showMenu && (
           <button
             type="button"
-            onClick={toggleSidebar}
+            onClick={() => dispatch(toggleSidebar())}
             aria-label={t('nav.dashboard')}
             className="rounded-button p-2 text-text-primary transition-colors hover:bg-gray-100 md:hidden"
           >
@@ -35,7 +35,7 @@ export function Topbar({ showMenu = true }: TopbarProps) {
       <div className="flex items-center gap-2">
         <LanguageSwitcher />
         {user && <Avatar name={user.name} src={user.avatarUrl} size="sm" />}
-        <Button variant="ghost" size="sm" onClick={logout} aria-label={t('actions.logout')}>
+        <Button variant="ghost" size="sm" onClick={() => dispatch(logout())} aria-label={t('actions.logout')}>
           <LogOut size={18} />
           <span className="hidden sm:inline">{t('actions.logout')}</span>
         </Button>

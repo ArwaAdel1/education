@@ -1,5 +1,5 @@
-import { useUIStore } from '@/store/uiStore';
+import { useAppSelector } from '@/store/hooks';
 
-export function useDirection(): 'rtl' | 'ltr' {
-  return useUIStore((state) => state.direction);
+export function useDirection() {
+  return useAppSelector((state) => state.ui.direction);
 }

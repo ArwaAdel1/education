@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { useAuthStore } from '@/store/authStore';
-import { useTenantStore } from '@/store/tenantStore';
+import { store } from '@/store';
+import { logout } from '@/store/slices/authSlice';
 
 const TOKEN_KEY = 'auth-token';
 
@@ -15,7 +15,7 @@ apiClient.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  const currentTenant = useTenantStore.getState().currentTenant;
+  const currentTenant = store.getState().tenant.currentTenant;
   if (currentTenant) {
     config.headers['X-Tenant-ID'] = currentTenant.id;
   }
@@ -28,7 +28,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      useAuthStore.getState().logout();
+      store.dispatch(logout());
       window.location.href = '/auth';
     }
     return Promise.reject(error);
