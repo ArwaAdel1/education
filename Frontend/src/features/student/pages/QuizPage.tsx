@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card } from '@/components/ui';
-import { useToastStore } from '@/store/toastStore';
+import { addToast } from '@/store/slices/toastSlice';
+import { useAppDispatch } from '@/store/hooks';
 import { mockQuiz } from '@/mocks/quizzes';
 import { cn } from '@/lib/utils/cn';
 
@@ -9,7 +10,7 @@ type AnswerValue = number | boolean;
 
 export function QuizPage() {
   const { t } = useTranslation();
-  const addToast = useToastStore((state) => state.addToast);
+  const dispatch = useAppDispatch();
   const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
 
   const setAnswer = (questionId: string, value: AnswerValue) => {
@@ -17,7 +18,7 @@ export function QuizPage() {
   };
 
   const handleSubmit = () => {
-    addToast({ type: 'success', message: 'تم إرسال إجاباتك بنجاح' });
+    dispatch(addToast({ type: 'success', message: 'تم إرسال إجاباتك بنجاح' }));
   };
 
   return (

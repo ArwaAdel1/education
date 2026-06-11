@@ -2,19 +2,21 @@ import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Card, Input, Tabs } from '@/components/ui';
-import { useAuthStore } from '@/store/authStore';
+import {
+  loginAsStudent,
+  loginAsTeacher,
+  loginAsSupportAgent,
+  loginAsSuperAdmin,
+} from '@/store/slices/authSlice';
+import { useAppDispatch } from '@/store/hooks';
 
 type AuthTab = 'login' | 'register';
 
 export function AuthPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState<AuthTab>('login');
-
-  const loginAsStudent = useAuthStore((state) => state.loginAsStudent);
-  const loginAsTeacher = useAuthStore((state) => state.loginAsTeacher);
-  const loginAsSupportAgent = useAuthStore((state) => state.loginAsSupportAgent);
-  const loginAsSuperAdmin = useAuthStore((state) => state.loginAsSuperAdmin);
 
   const devLogins = [
     { key: 'student', label: t('auth:loginAs.student'), action: loginAsStudent, path: '/student/dashboard' },
@@ -70,7 +72,7 @@ export function AuthPage() {
               variant="ghost"
               size="sm"
               onClick={() => {
-                action();
+                dispatch(action());
                 navigate(path);
               }}
             >

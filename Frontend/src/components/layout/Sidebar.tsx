@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { type LucideIcon } from 'lucide-react';
-import { useUIStore } from '@/store/uiStore';
+import { setSidebarOpen } from '@/store/slices/uiSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { cn } from '@/lib/utils/cn';
 
 export interface SidebarItem {
@@ -39,10 +40,10 @@ function NavItems({ items, onNavigate }: { items: SidebarItem[]; onNavigate?: ()
 }
 
 export function Sidebar({ items }: SidebarProps) {
-  const sidebarOpen = useUIStore((state) => state.sidebarOpen);
-  const setSidebarOpen = useUIStore((state) => state.setSidebarOpen);
-  const direction = useUIStore((state) => state.direction);
-  const close = () => setSidebarOpen(false);
+  const dispatch = useAppDispatch();
+  const sidebarOpen = useAppSelector((state) => state.ui.sidebarOpen);
+  const direction = useAppSelector((state) => state.ui.direction);
+  const close = () => dispatch(setSidebarOpen(false));
 
   return (
     <>

@@ -1,18 +1,19 @@
-import { useAuthStore } from '@/store/authStore';
+import { login, logout } from '@/store/slices/authSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export function useAuth() {
-  const user = useAuthStore((state) => state.user);
-  const token = useAuthStore((state) => state.token);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const login = useAuthStore((state) => state.login);
-  const logout = useAuthStore((state) => state.logout);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+  const token = useAppSelector((state) => state.auth.token);
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
   return {
     user,
     token,
     isAuthenticated,
     role: user?.role,
-    login,
-    logout,
+    login: (userData: Parameters<typeof login>[0]['user'], authToken: string) =>
+      dispatch(login({ user: userData, token: authToken })),
+    logout: () => dispatch(logout()),
   };
 }

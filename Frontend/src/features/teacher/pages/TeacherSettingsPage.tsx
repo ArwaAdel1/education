@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { Button, Card, Input } from '@/components/ui';
-import { useAuthStore } from '@/store/authStore';
-import { useUIStore } from '@/store/uiStore';
+import { setLanguage } from '@/store/slices/uiSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export function TeacherSettingsPage() {
   const { t } = useTranslation();
-  const user = useAuthStore((state) => state.user);
-  const language = useUIStore((state) => state.language);
-  const setLanguage = useUIStore((state) => state.setLanguage);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+  const language = useAppSelector((state) => state.ui.language);
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
@@ -28,7 +28,7 @@ export function TeacherSettingsPage() {
           <select
             id="settings-language"
             value={language}
-            onChange={(event) => setLanguage(event.target.value as 'ar' | 'en')}
+            onChange={(event) => dispatch(setLanguage(event.target.value as 'ar' | 'en'))}
             className="h-[48px] w-full rounded-input border border-border bg-surface px-3 font-cairo text-text-primary outline-none focus:border-accent"
           >
             <option value="ar">{t('language.ar')}</option>

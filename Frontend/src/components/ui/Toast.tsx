@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
-import { useToastStore } from '@/store/toastStore';
+import { removeToast } from '@/store/slices/toastSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { cn } from '@/lib/utils/cn';
 import { Card } from './Card';
 
@@ -12,8 +13,8 @@ const borderClasses: Record<'success' | 'error' | 'warning' | 'info', string> = 
 };
 
 export function Toast() {
-  const toasts = useToastStore((state) => state.toasts);
-  const removeToast = useToastStore((state) => state.removeToast);
+  const dispatch = useAppDispatch();
+  const toasts = useAppSelector((state) => state.toast.toasts);
 
   if (toasts.length === 0) return null;
 
@@ -31,7 +32,7 @@ export function Toast() {
           <span className="font-cairo text-sm text-text-primary">{toast.message}</span>
           <button
             type="button"
-            onClick={() => removeToast(toast.id)}
+            onClick={() => dispatch(removeToast(toast.id))}
             aria-label="close"
             className="shrink-0 text-text-secondary transition-colors hover:text-text-primary"
           >

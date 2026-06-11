@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { Sparkles } from 'lucide-react';
 import { Button, Card, Input } from '@/components/ui';
-import { useToastStore } from '@/store/toastStore';
+import { addToast } from '@/store/slices/toastSlice';
+import { useAppDispatch } from '@/store/hooks';
 import { cn } from '@/lib/utils/cn';
 
 export function AiQuizGeneratorPage() {
   const { t } = useTranslation();
-  const addToast = useToastStore((state) => state.addToast);
+  const dispatch = useAppDispatch();
 
   const steps = [
     { num: '١', labelKey: 'teacher:quizGenerator.step1' },
@@ -74,7 +75,7 @@ export function AiQuizGeneratorPage() {
 
         <Button
           className="self-start"
-          onClick={() => addToast({ type: 'info', message: 'جارٍ توليد الاختبار بالذكاء الاصطناعي...' })}
+          onClick={() => dispatch(addToast({ type: 'info', message: 'جارٍ توليد الاختبار بالذكاء الاصطناعي...' }))}
         >
           <Sparkles size={18} />
           {t('teacher:quizGenerator.generateBtn')}

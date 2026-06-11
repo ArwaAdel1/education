@@ -1,13 +1,13 @@
-import { useTenantStore } from '@/store/tenantStore';
+import { applyTenantTheme, setTenant } from '@/store/slices/tenantSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export function useTenant() {
-  const currentTenant = useTenantStore((state) => state.currentTenant);
-  const setTenant = useTenantStore((state) => state.setTenant);
-  const applyTenantTheme = useTenantStore((state) => state.applyTenantTheme);
+  const dispatch = useAppDispatch();
+  const currentTenant = useAppSelector((state) => state.tenant.currentTenant);
 
   return {
     tenant: currentTenant,
-    setTenant,
-    applyTheme: applyTenantTheme,
+    setTenant: (tenant: Parameters<typeof setTenant>[0]) => dispatch(setTenant(tenant)),
+    applyTheme: () => applyTenantTheme(currentTenant),
   };
 }
