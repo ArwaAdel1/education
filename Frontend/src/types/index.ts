@@ -1,4 +1,5 @@
 export type * from './user';
+export type * from './teacher';
 export type * from './tenant';
 export type * from './content';
 export type * from './enrollment';

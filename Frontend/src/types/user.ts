@@ -1,12 +1,27 @@
-export type UserRole = 'student' | 'teacher' | 'support_agent' | 'super_admin';
+// src/types/user.ts
+export type UserRole = "student" | "teacher" | "support_agent" | "super_admin";
+export type ServerRole = "STUDENT" | "TEACHER" | "SUPPORT" | "ADMIN";
+export type UserStatus = "ACTIVE" | "INACTIVE" | "BANNED";
 
 export interface User {
   id: string;
+  fullName: string;
   email: string;
-  name: string;
+  mobile: string;
   role: UserRole;
-  tenantId: string;
-  phone?: string;
-  avatarUrl?: string;
+  status: UserStatus;
   createdAt: string;
+}
+
+export interface RegisterPayload {
+  fullName: string;
+  email: string;
+  mobile: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  accessToken: string;
+  refreshToken?: string;
 }

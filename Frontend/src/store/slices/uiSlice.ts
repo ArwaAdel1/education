@@ -1,11 +1,11 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import i18n from '@/lib/i18n';
-import type { AppThunk } from '../types';
+// src/store/uiSlice.ts
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import i18n from "@/lib/i18n";
 
-export type Language = 'ar' | 'en';
-export type Direction = 'rtl' | 'ltr';
+type Language = "ar" | "en";
+type Direction = "rtl" | "ltr";
 
-export interface UIState {
+interface UIState {
   sidebarOpen: boolean;
   language: Language;
   direction: Direction;
@@ -13,42 +13,36 @@ export interface UIState {
 
 const initialState: UIState = {
   sidebarOpen: true,
-  language: 'ar',
-  direction: 'rtl',
+  language: "ar",
+  direction: "rtl",
 };
 
 const uiSlice = createSlice({
-  name: 'ui',
+  name: "ui",
   initialState,
   reducers: {
-    toggleSidebar: (state) => {
+    toggleSidebar(state) {
       state.sidebarOpen = !state.sidebarOpen;
     },
-    setSidebarOpen: (state, action: PayloadAction<boolean>) => {
+    setSidebarOpen(state, action: PayloadAction<boolean>) {
       state.sidebarOpen = action.payload;
     },
-    setLanguageState: (
-      state,
-      action: PayloadAction<{ language: Language; direction: Direction }>,
-    ) => {
-      state.language = action.payload.language;
-      state.direction = action.payload.direction;
+    setLanguage(state, action: PayloadAction<Language>) {
+      state.language = action.payload;
+      state.direction = action.payload === "ar" ? "rtl" : "ltr";
     },
   },
 });
 
-export const { toggleSidebar, setSidebarOpen, setLanguageState } = uiSlice.actions;
+export const { toggleSidebar, setSidebarOpen, setLanguage } = uiSlice.actions;
+export default uiSlice.reducer;
 
-export const setLanguage =
-  (lang: Language): AppThunk =>
-  (dispatch) => {
-    const direction: Direction = lang === 'ar' ? 'rtl' : 'ltr';
-    dispatch(setLanguageState({ language: lang, direction }));
-
+// Thunk typed with generic Dispatch to avoid circular import with store/index.ts
+export const changeLanguage =
+  (lang: Language) =>
+  (dispatch: (action: ReturnType<typeof setLanguage>) => void) => {
+    dispatch(setLanguage(lang));
     document.documentElement.lang = lang;
-    document.documentElement.dir = direction;
-
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
     i18n.changeLanguage(lang);
   };
-
-export default uiSlice.reducer;

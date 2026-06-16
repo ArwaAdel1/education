@@ -1,36 +1,46 @@
-import axios from 'axios';
-import { store } from '@/store';
-import { logout } from '@/store/slices/authSlice';
+// src/lib/api/client.ts
+import axios, { type AxiosError } from "axios";
+import { getToken, removeToken } from "@/lib/auth/token";
 
-const TOKEN_KEY = 'auth-token';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000/api";
 
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: BASE_URL,
+  headers: { "Content-Type": "application/json" },
 });
 
-// Request interceptor: attach auth token and tenant id.
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  const currentTenant = store.getState().tenant.currentTenant;
-  if (currentTenant) {
-    config.headers['X-Tenant-ID'] = currentTenant.id;
-  }
-
+  const token = getToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  const tenantId = localStorage.getItem("tenant-id");
+  if (tenantId) config.headers["X-Tenant-ID"] = tenantId;
   return config;
 });
 
-// Response interceptor: handle 401 by logging out and redirecting.
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error: AxiosError) => {
     if (error.response?.status === 401) {
+      removeToken();
+      const { store } = await import("@/store");
+      const { logout } = await import("@/store/slices/authSlice");
       store.dispatch(logout());
-      window.location.href = '/auth';
+      if (window.location.pathname !== "/auth") {
+        window.location.assign("/auth");
+      }
     }
-    return Promise.reject(error);
-  },
+    return Promise.reject(normalizeError(error));
+  }
 );
+
+export interface ApiError {
+  statusCode: number;
+  message: string;
+}
+
+function normalizeError(error: AxiosError): ApiError {
+  const data = error.response?.data as { message?: string | string[] } | undefined;
+  const raw = data?.message;
+  const message = Array.isArray(raw) ? raw[0] : (raw ?? "حصل خطأ، حاول تاني.");
+  return { statusCode: error.response?.status ?? 0, message };
+}

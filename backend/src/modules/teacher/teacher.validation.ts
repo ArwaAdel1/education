@@ -23,7 +23,11 @@ export const updateTeacherProfileSchema = z
       )
       .optional(),
     subject: z.string().trim().optional(),
-    bio: z.string().trim().optional(),
+    bio: z
+      .string()
+      .trim()
+      .max(500, "Bio must not exceed 500 characters")
+      .optional(),
     photoUrl: z.string().optional(),
     logoUrl: z.string().optional(),
   })

@@ -484,7 +484,7 @@ function ChaptersSection() {
                       <BookOpen size={48} className="text-white/40" />
                     </div>
                     {locked && (
-                      <Badge variant="warning" className="absolute left-3 top-3 bg-warning text-white">
+                      <Badge variant="warning" className="absolute left-3 top-3">
                         {t('chapters.comingSoon')}
                       </Badge>
                     )}
@@ -713,7 +713,7 @@ const testimonials: Testimonial[] = [
 
 function TestimonialCard({ item }: { item: Testimonial }) {
   return (
-    <Card padding="none" className="flex-1 bg-primary/5 p-6 shadow-sm">
+    <Card padding="none" className="flex-1 bg-surface p-6 shadow-sm">
       <div className="flex gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star key={i} size={16} className="fill-warning text-warning" />
